@@ -40,14 +40,14 @@ def main():
     #Configure the cache
     ##########################################################################################
     print("configure the cache:" + "\n")
-    cache_size = int(input("Cache size: "))                   #C
-    data_block_size = int(input("data block size: "))         #B
+    cache_size = int(input("Cache size: "))                    #C
+    data_block_size = int(input("data block size: "))          #B
     associativity = int(input("associativity: "))              #E
     replacement_policy = int(input("replacement policy: "))    #use later
     write_hit_policy = int(input("write hit policy: "))        #use later
     write_miss_policy = int(input("write miss policy: "))      #use later
     #implement inputs, create cache memory (use matrix? array? dictionary?)
-    number_of_sets = cache_size / (data_block_size * associativity)
+    number_of_sets = int(cache_size / (data_block_size * associativity))
     cache_data = [[['-1' for col in range(data_block_size)] for col in range(associativity)] for col in range(number_of_sets)] #fill cache with -1's
     print(cache_data) ################# REMOVE LATER (test that dimensions are correct)
     print("cache successfully configured!")
