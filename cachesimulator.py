@@ -79,11 +79,11 @@ def main():
             bs_address_string = str(binary_search_address)
             stringlength = len(bs_address_string)
             stringlength = 8 - stringlength
-            for i in range(1, stringlength):
-                stringlength = "0" + stringlength
-            binary_tag = [:2]
-            binary_set = [3:4]
-            binary_offset = [5:]
+            for _ in range(0, stringlength): # making sure that the bin search address is at least 8 bits; must start at index 0; convention is to use _ if unused index
+                bs_address_string = "0" + bs_address_string
+            binary_tag = bs_address_string[:2] # tag is the first two bits
+            binary_set = bs_address_string[3:4] # set is the 3rd bit; note that string splicing doesn't include end number
+            binary_offset = bs_address_string[5:] # offset is the rest of the bits starting from the 5th bit
             d_tag = int(binary_tag, 2)
             d_set = int(binary_set, 2)
             d_offset = int(binary_offset, 2)
