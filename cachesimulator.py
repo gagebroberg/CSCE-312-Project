@@ -7,6 +7,7 @@
 #and prompting the user for inputs. We then use the inputs for updating, deleting, and printing cache memory.
 
 import numpy
+import math
 import sys
 
 #dictionaries
@@ -40,15 +41,23 @@ def main():
     #Configure the cache
     ##########################################################################################
     print("configure the cache:" + "\n")
-    cache_size = int(input("Cache size: "))                    #C
-    data_block_size = int(input("data block size: "))          #B
-    associativity = int(input("associativity: "))              #E
+    cache_size = int(input("Cache size: "))                                         #C
+    while (cache_size < 8 or cache_size > 256):                                     # Making sure that the requested cache size is in the allowed range
+        cache_size = int(input("Cache size must be between 8 and 256 bytes: "))
+    data_block_size = int(input("data block size: "))                               #B
+    associativity = int(input("associativity: "))                                   #E
+    #implement inputs, create cache memory (use matrix? array? dictionary?)
+    number_of_sets = int(cache_size / (data_block_size * associativity))            #S
+    max_memory_addresses = len(ramdict)                                             #M
+    num_address_bits = math.log(max_memory_addresses, 2)                            #m
+    num_block_offset_bits = math.log(data_block_size, 2)                            #b
+    num_set_index_bits = math.log(number_of_sets, 2)                                #s
+    num_tag_bits = num_address_bits - (num_block_offset_bits + num_set_index_bits)  #t
+    num_valid_bits = 1
     replacement_policy = int(input("replacement policy: "))    #use later
     write_hit_policy = int(input("write hit policy: "))        #use later
     write_miss_policy = int(input("write miss policy: "))      #use later
-    #implement inputs, create cache memory (use matrix? array? dictionary?)
-    number_of_sets = int(cache_size / (data_block_size * associativity))
-    cache_data = [[['-1' for col in range(data_block_size)] for col in range(associativity)] for col in range(number_of_sets)] #fill cache with -1's
+    cache_data = [[['-1' for col in range(num_valid_bits + num_tag_bits + data_block_size)] for col in range(associativity)] for col in range(number_of_sets)] #fill cache with -1's
     print(cache_data) ################# REMOVE LATER (test that dimensions are correct)
     print("cache successfully configured!")
     ##########################################################################################
