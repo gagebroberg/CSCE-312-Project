@@ -1,3 +1,3 @@
 # CSCE-312-Project
 
-This file should eventually contain information on how to compile and run the program.
+In order to run this program, the user can use the command line. The command that runs the program is "python3 cachesimulator.py <name of file from which to derive ram>"
