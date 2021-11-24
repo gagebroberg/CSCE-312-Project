@@ -81,14 +81,14 @@ def main():
             stringlength = 8 - stringlength
             for _ in range(0, stringlength): # making sure that the bin search address is at least 8 bits; must start at index 0; convention is to use _ if unused index
                 bs_address_string = "0" + bs_address_string
-            binary_tag = bs_address_string[:2] # tag is the first two bits
-            binary_set = bs_address_string[3:4] # set is the 3rd bit; note that string splicing doesn't include end number
-            binary_offset = bs_address_string[5:] # offset is the rest of the bits starting from the 5th bit
+            binary_tag = bs_address_string[:3] # tag is the first three bits
+            binary_set = bs_address_string[3:5] # set is the 3rd and 4th bit
+            binary_offset = bs_address_string[5:] # offset is the rest of the bits starting from the 5th bit; 3 bits
             d_tag = int(binary_tag, 2)
             d_set = int(binary_set, 2)
             d_offset = int(binary_offset, 2)
-            print("set:" + d_set)
-            print("tag:" + d_tag)
+            print("set:" + str(d_set))
+            print("tag:" + str(d_tag))
             cache_search = cache_data[d_set][d_tag][d_offset]
             is_hit = "Yes"
             if(cache_search == -1):
