@@ -43,14 +43,13 @@ def main():
     cache_size = input("Cache size: ")                    #C
     data_block_size = input("data block size: ")          #B
     associativity = input("associativity: ")              #E
-    replacement_policy = input("replacement policy: ")
-    write_hit_policy = input("write hit policy: ")
-    write_miss_policy = input("write miss policy: ")
+    replacement_policy = input("replacement policy: ")    #use later
+    write_hit_policy = input("write hit policy: ")        #use later
+    write_miss_policy = input("write miss policy: ")      #use later
     #implement inputs, create cache memory (use matrix? array? dictionary?)
     number_of_sets = cache_size / (data_block_size * associativity)
-    cache_data = [['0' for col in range(data_block_size)] for col in range(associativity)] for col in range(number_of_sets)
-    print(cache_data)
-    
+    cache_data = [[['-1' for col in range(data_block_size)] for col in range(associativity)] for col in range(number_of_sets)] #fill cache with -1's
+    print(cache_data) ################# REMOVE LATER (test that dimensions are correct)
     print("cache successfully configured!")
     ##########################################################################################
 
@@ -73,7 +72,30 @@ def main():
 
     def process_user_input(user_cache_prompt): #handle each case
         if(user_cache_prompt == "cache-read"):
-            print("read")
+            search_address = input()
+            new_search_address = search_address[2:]
+            decimal_search_address = int(new_search_address, 16)
+            binary_search_address = bin(decimal_search_address)
+            binary_search_address = binary_search_address[2:]
+            bs_address_string = str(binary_search_address)
+            stringlength = len(bs_address_string)
+            stringlength = 8 - stringlength
+            for i in range(1, stringlength):
+                stringlength = "0" + stringlength
+            binary_tag = [:2]
+            binary_set = [3:4]
+            binary_offset = [5:]
+            d_tag = int(binary_tag, 2)
+            d_set = int(binary_set, 2)
+            d_offset = int(binary_offset, 2)
+            print("set:" + d_set)
+            print("tag:" + d_tag)
+            cache_search = cache_data[d_set][d_tag][d_offset]
+            is_hit = "Yes"
+            if(cache_search == -1):
+                is_hit = "No"
+            print("hit:" + is_hit)
+            print("ram_address:" + search_address)
         elif(user_cache_prompt == "cache-write"):
             print("1")
         elif(user_cache_prompt == "cache-flush"):
