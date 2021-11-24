@@ -31,6 +31,7 @@ def main():
             break
         memaddress += 1 #increment memory address, such that each index is unique
         ramdict[memaddress] = memoryline #store memoryline at memaddress
+    data_file.close() #close the file
 
     print("init-ram 0x00 " + "0x%X" % memaddress) #print the size of ram memory
     print("RAM succesfully initialized!") #print once all data in file has been added to memory dictionary
