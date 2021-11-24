@@ -6,8 +6,6 @@
 #Description: In this lab, we wrote a program which simulates a cache memory. It consists of taking an input file for memory,
 #and prompting the user for inputs. We then use the inputs for updating, deleting, and printing cache memory.
 
-#Adding a comment
-
 import numpy
 import sys
 
