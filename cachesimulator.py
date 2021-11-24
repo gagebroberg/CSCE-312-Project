@@ -41,18 +41,18 @@ def main():
     #Configure the cache
     ##########################################################################################
     print("configure the cache:" + "\n")
-    cache_size = int(input("Cache size: "))                                         #C
-    while (cache_size < 8 or cache_size > 256):                                     # Making sure that the requested cache size is in the allowed range
+    cache_size = int(input("Cache size: "))                                             #C
+    while (cache_size < 8 or cache_size > 256):                                         # Making sure that the requested cache size is in the allowed range
         cache_size = int(input("Cache size must be between 8 and 256 bytes: "))
-    data_block_size = int(input("data block size: "))                               #B
-    associativity = int(input("associativity: "))                                   #E
+    data_block_size = int(input("data block size: "))                                   #B
+    associativity = int(input("associativity: "))                                       #E
     #implement inputs, create cache memory (use matrix? array? dictionary?)
-    number_of_sets = int(cache_size / (data_block_size * associativity))            #S
-    max_memory_addresses = len(ramdict)                                             #M
-    num_address_bits = math.log(max_memory_addresses, 2)                            #m
-    num_block_offset_bits = math.log(data_block_size, 2)                            #b
-    num_set_index_bits = math.log(number_of_sets, 2)                                #s
-    num_tag_bits = num_address_bits - (num_block_offset_bits + num_set_index_bits)  #t
+    number_of_sets = int(cache_size / (data_block_size * associativity))                #S
+    max_memory_addresses = len(ramdict)                                                 #M
+    num_address_bits = math.log(max_memory_addresses, 2)                                #m
+    num_block_offset_bits = math.log(data_block_size, 2)                                #b
+    num_set_index_bits = math.log(number_of_sets, 2)                                    #s
+    num_tag_bits = int(num_address_bits - (num_block_offset_bits + num_set_index_bits)) #t
     num_valid_bits = 1
     replacement_policy = int(input("replacement policy: "))    #use later
     write_hit_policy = int(input("write hit policy: "))        #use later
