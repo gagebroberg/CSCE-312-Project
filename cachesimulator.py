@@ -71,10 +71,9 @@ def main():
     print_cache_menu()
 
     def process_user_input(user_cache_prompt): #handle each case
-        if(user_cache_prompt == "cache-read"):
-            search_address = input()
-            new_search_address = search_address[2:]
-            decimal_search_address = int(new_search_address, 16)
+        if("cache-read" in user_cache_prompt): # user must enter this command in the form "cache-read 0x___"
+            search_address = user_cache_prompt.split()[1].split("x")[1] #grabbing hexadecimal value from search address
+            decimal_search_address = int(search_address, 16)
             binary_search_address = bin(decimal_search_address)
             binary_search_address = binary_search_address[2:]
             bs_address_string = str(binary_search_address)
