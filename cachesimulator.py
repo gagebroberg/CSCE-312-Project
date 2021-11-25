@@ -49,10 +49,10 @@ def main():
     #implement inputs, create cache memory (use matrix? array? dictionary?)
     number_of_sets = int(cache_size / (data_block_size * associativity))                #S
     max_memory_addresses = len(ramdict)                                                 #M
-    num_address_bits = math.log(max_memory_addresses, 2)                                #m
-    num_block_offset_bits = math.log(data_block_size, 2)                                #b
-    num_set_index_bits = math.log(number_of_sets, 2)                                    #s
-    num_tag_bits = int(num_address_bits - (num_block_offset_bits + num_set_index_bits)) #t
+    num_address_bits = int(math.log(max_memory_addresses, 2))                                #m
+    num_block_offset_bits = int(math.log(data_block_size, 2))                                #b
+    num_set_index_bits = int(math.log(number_of_sets, 2))                                    #s
+    num_tag_bits = num_address_bits - (num_block_offset_bits + num_set_index_bits) #t
     num_valid_bits = 1
     replacement_policy = int(input("replacement policy: "))    #use later
     write_hit_policy = int(input("write hit policy: "))        #use later
@@ -90,15 +90,15 @@ def main():
             stringlength = 8 - stringlength
             for _ in range(0, stringlength): # making sure that the bin search address is at least 8 bits; must start at index 0; convention is to use _ if unused index
                 bs_address_string = "0" + bs_address_string
-            binary_tag = bs_address_string[:3] # tag is the first three bits
-            binary_set = bs_address_string[3:5] # set is the 3rd and 4th bit
-            binary_offset = bs_address_string[5:] # offset is the rest of the bits starting from the 5th bit; 3 bits
+            binary_tag = bs_address_string[:num_tag_bits] # tag bits defined previously
+            binary_set = bs_address_string[num_tag_bits:num_tag_bits + num_set_index_bits] # from end of tag bits to end of set bits
+            binary_offset = bs_address_string[num_tag_bits + num_set_index_bits:] # from the end of set bets to the end of the address
             d_tag = int(binary_tag, 2)
             d_set = int(binary_set, 2)
             d_offset = int(binary_offset, 2)
             print("set:" + str(d_set))
             print("tag:" + str(d_tag))
-            cache_search = cache_data[d_set][d_tag][d_offset]
+            cache_search = cache_data[d_set][d_tag][d_offset] # I don't think this is the correct way to search througn the cache
             is_hit = "Yes"
             if(cache_search == -1):
                 is_hit = "No"
