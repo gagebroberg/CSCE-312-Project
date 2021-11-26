@@ -99,20 +99,23 @@ def main():
             print("set:" + str(d_set))
             print("tag:" + str(d_tag))
             cache_hit = False
-            search_address = -1 #initializing the search address
+            data = -1 #initializing the search address
             for data_line in cache_data[d_set]:
                 tag_bits = data_line[1:num_tag_bits+1]
-                if (tag_bits == binary_tag):
-                    cache_hit == true
-                if (data_line[0] != 1):
-                    cache_hit == false
+                if (tag_bits == binary_tag):  #check that the tag bits in data_line match
+                    cache_hit == True
+                if (data_line[0] != 1): #check the valid bit is true
+                    cache_hit == False
                 if(cache_hit):
-                    search_address = data_line[num_tag_bits + 1 + d_offset]
-            is_hit = "Yes"
-            if(cache_search == -1):
-                is_hit = "No"
+                    data = data_line[num_tag_bits + 1 + d_offset]
+            if(data == -1):
+                cache_hit = False
+            is_hit = "No"
+            if(cache_hit):
+                is_hit = "Yes"
             print("hit:" + is_hit)
             print("ram_address:" + search_address)
+            print("data:" + data)
         elif(user_cache_prompt == "cache-write"):
             print("1")
         elif(user_cache_prompt == "cache-flush"):
