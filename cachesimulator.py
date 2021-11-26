@@ -12,6 +12,29 @@ import sys
 
 #dictionaries
 ramdict = {} #ram memory dictionary
+repl_policy_dict = {1:'random_replacement', 2:'least_recently_used'}
+write_hit_policy_dict = {1:'write_through',2:'write_back'}
+write_miss_policy_dict = {1:'write_allocate',2:'no_write_allocate'}
+
+# initializing globals for user input
+cache_size = 0
+data_block_size = 0
+associativity = 0 
+replacement_policy = 0
+write_hit_policy = 0
+write_miss_policy = 0
+number_of_cache_hits = 0
+number_of_cache_misses = 0
+
+#initializing calculated globals
+number_of_sets = 0
+max_memory_addresses = 0
+num_address_bits = 0
+num_block_offset_bits = 0
+num_set_index_bits = 0
+num_tag_bits = 0
+num_valid_bits = 1
+cache_data = list()
 
 def main():
     #Initialize Physical memory
@@ -40,112 +63,137 @@ def main():
 
     #Configure the cache
     ##########################################################################################
-    print("configure the cache:" + "\n")
+    print("configure the cache:")
+    global cache_size
     cache_size = int(input("Cache size: "))                                             #C
     while (cache_size < 8 or cache_size > 256):                                         # Making sure that the requested cache size is in the allowed range
         cache_size = int(input("Cache size must be between 8 and 256 bytes: "))
+    global data_block_size
     data_block_size = int(input("data block size: "))                                   #B
+    global associativity
     associativity = int(input("associativity: "))                                       #E
-    #implement inputs, create cache memory (use matrix? array? dictionary?)
-    number_of_sets = int(cache_size / (data_block_size * associativity))                #S
-    max_memory_addresses = len(ramdict)                                                 #M
-    num_address_bits = int(math.log(max_memory_addresses, 2))                                #m
-    num_block_offset_bits = int(math.log(data_block_size, 2))                                #b
-    num_set_index_bits = int(math.log(number_of_sets, 2))                                    #s
-    num_tag_bits = num_address_bits - (num_block_offset_bits + num_set_index_bits) #t
-    num_valid_bits = 1
+    global replacement_policy
     replacement_policy = int(input("replacement policy: "))    #use later
+    global write_hit_policy
     write_hit_policy = int(input("write hit policy: "))        #use later
+    global write_miss_policy
     write_miss_policy = int(input("write miss policy: "))      #use later
+
+    # The following are calculated based on the above user inputs
+    global number_of_sets
+    number_of_sets = int(cache_size / (data_block_size * associativity))                #S
+    global max_memory_addresses
+    max_memory_addresses = len(ramdict)                                                 #M
+    global num_address_bits
+    num_address_bits = int(math.log(max_memory_addresses, 2))                           #m
+    global num_block_offset_bits
+    num_block_offset_bits = int(math.log(data_block_size, 2))                           #b
+    global num_set_index_bits
+    num_set_index_bits = int(math.log(number_of_sets, 2))                               #s
+    global num_tag_bits
+    num_tag_bits = num_address_bits - (num_block_offset_bits + num_set_index_bits)      #t
+    global cache_data
     cache_data = [[['0' for x in range(num_valid_bits + num_tag_bits + data_block_size)] for y in range(associativity)] for z in range(number_of_sets)] #fill cache with -1's
-    print(cache_data) ################# REMOVE LATER (test that dimensions are correct)
-    print("cache successfully configured!")
-    ##########################################################################################
-
-    #Simulate the cache
-    ##########################################################################################
-    #print menu
-    def print_cache_menu():
-        print("*** Cache simulator menu ***")
-        print("type one command:")
-        print("1. cache-read")
-        print("2. cache-write")
-        print("3. cache-flush")
-        print("4. cache-view")
-        print("5. memory-view")
-        print("6. cache-dump")
-        print("7. memory-dump")
-        print("8. quit")
-        print("****************************")
+    print("cache successfully configured!")                          
     print_cache_menu()
-
-    def process_user_input(user_cache_prompt): #handle each case
-        if("cache-read" in user_cache_prompt): # user must enter this command in the form "cache-read 0x___"
-            search_address = user_cache_prompt.split()[1].split("x")[1] #grabbing hexadecimal value from search address
-            decimal_search_address = int(search_address, 16)
-            binary_search_address = bin(decimal_search_address)
-            binary_search_address = binary_search_address[2:]
-            bs_address_string = str(binary_search_address)
-            stringlength = len(bs_address_string)
-            stringlength = 8 - stringlength
-            for _ in range(0, stringlength): # making sure that the bin search address is at least 8 bits; must start at index 0; convention is to use _ if unused index
-                bs_address_string = "0" + bs_address_string
-            binary_tag = bs_address_string[:num_tag_bits] # tag bits defined previously
-            binary_set = bs_address_string[num_tag_bits:num_tag_bits + num_set_index_bits] # from end of tag bits to end of set bits
-            binary_offset = bs_address_string[num_tag_bits + num_set_index_bits:] # from the end of set bets to the end of the address
-            d_tag = int(binary_tag, 2)
-            d_set = int(binary_set, 2)
-            d_offset = int(binary_offset, 2)
-            print("set:" + str(d_set))
-            print("tag:" + str(d_tag))
-            cache_hit = False
-            data = -1 #initializing the search address
-            for data_line in cache_data[d_set]:
-                tag_bits = data_line[1:num_tag_bits+1]
-                if (tag_bits == binary_tag):  #check that the tag bits in data_line match
-                    cache_hit == True
-                if (data_line[0] != 1): #check the valid bit is true
-                    cache_hit == False
-                if(cache_hit):
-                    data = data_line[num_tag_bits + 1 + d_offset]
-            if(data == '0'):
-                cache_hit = False
-            is_hit = "No"
-            if(cache_hit):
-                is_hit = "Yes"
-            else:
-                data = ramdict[decimal_search_address]
-            print("hit:" + is_hit)
-            print("ram_address:" + search_address)
-            print("data:" + data)
-        elif(user_cache_prompt == "cache-write"):
-            print("1")
-        elif(user_cache_prompt == "cache-flush"):
-            for z in range(number_of_sets):
-                for y in range(associativity):
-                    for x in range(num_valid_bits + num_tag_bits + data_block_size):
-                        cache_data[x][y][z] = '0'
-            print("cache_cleared")
-        elif(user_cache_prompt == "cache-view"):
-            print("3")
-        elif(user_cache_prompt == "memory-view"):
-            print("4")
-        elif(user_cache_prompt == "cache_dump"):
-            print("5")
-        elif(user_cache_prompt == "memory_dump"):
-            print("6")
-        elif(user_cache_prompt == "quit"):
-            print("0")
-        else:
-            print("-1")
-    
     user_cache_prompt = input()
-    process_user_input(user_cache_prompt)
+    process_user_input(user_cache_prompt)    
     while(user_cache_prompt != "quit"):
         print_cache_menu()
         user_cache_prompt = input()
         process_user_input(user_cache_prompt)
+    
     ##########################################################################################
+
+#Simulate the cache
+##########################################################################################
+#print menu
+def print_cache_menu():
+    print("*** Cache simulator menu ***")
+    print("type one command:")
+    print("1. cache-read")
+    print("2. cache-write")
+    print("3. cache-flush")
+    print("4. cache-view")
+    print("5. memory-view")
+    print("6. cache-dump")
+    print("7. memory-dump")
+    print("8. quit")
+    print("****************************")
+
+def process_user_input(user_cache_prompt): #handle each case
+    if("cache-read" in user_cache_prompt): # user must enter this command in the form "cache-read 0x___"
+        search_address = user_cache_prompt.split()[1].split("x")[1] #grabbing hexadecimal value from search address
+        decimal_search_address = int(search_address, 16)
+        binary_search_address = bin(decimal_search_address)
+        binary_search_address = binary_search_address[2:]
+        bs_address_string = str(binary_search_address)
+        stringlength = len(bs_address_string)
+        stringlength = 8 - stringlength
+        for _ in range(0, stringlength): # making sure that the bin search address is at least 8 bits; must start at index 0; convention is to use _ if unused index
+            bs_address_string = "0" + bs_address_string
+        binary_tag = bs_address_string[:num_tag_bits] # tag bits defined previously
+        binary_set = bs_address_string[num_tag_bits:num_tag_bits + num_set_index_bits] # from end of tag bits to end of set bits
+        binary_offset = bs_address_string[num_tag_bits + num_set_index_bits:] # from the end of set bets to the end of the address
+        d_tag = int(binary_tag, 2)
+        d_set = int(binary_set, 2)
+        d_offset = int(binary_offset, 2)
+        print("set:" + str(d_set))
+        print("tag:" + str(d_tag))
+        cache_hit = False
+        data = -1 #initializing the search address
+        for data_line in cache_data[d_set]:
+            tag_bits = data_line[1:num_tag_bits+1]
+            if (tag_bits == binary_tag):  #check that the tag bits in data_line match
+                cache_hit == True
+            if (data_line[0] != 1): #check the valid bit is true
+                cache_hit == False
+            if(cache_hit):
+                data = data_line[num_tag_bits + 1 + d_offset]
+        if(data == '0'):
+            cache_hit = False
+        is_hit = "No"
+        if(cache_hit):
+            is_hit = "Yes"
+            global number_of_cache_hits
+            number_of_cache_hits += 1
+            eviction_line = '-1'
+        else:
+            data = ramdict[decimal_search_address]
+            global number_of_cache_misses
+            number_of_cache_misses += 1
+            eviction_line = '-1'
+        print("hit:" + is_hit)
+        print("eviction_line:" + eviction_line)
+        print("ram_address:" + "0x" + search_address)
+        print("data:" + "0x" + data)
+    elif(user_cache_prompt == "cache-write"):
+        print("1")
+    elif(user_cache_prompt == "cache-flush"):
+        for z in range(number_of_sets):
+            for y in range(associativity):
+                for x in range(num_valid_bits + num_tag_bits + data_block_size):
+                    cache_data[x][y][z] = '0'
+        print("cache_cleared")
+    elif(user_cache_prompt == "cache-view"):
+        print("cache_size:" + str(cache_size))
+        print("data_block_size:" + str(data_block_size))
+        print("associativity:" + str(associativity))
+        print("replacement_policy:" + str(repl_policy_dict[replacement_policy]))
+        print("write_hit_policy:" + str(write_hit_policy_dict[write_hit_policy]))
+        print("write_miss_policy:" + str(write_miss_policy_dict[write_miss_policy]))
+        print("number_of_cache_hits:" + str(number_of_cache_hits))
+        print("number_of_cache_misses:" + str(number_of_cache_misses))
+    elif(user_cache_prompt == "memory-view"):
+        print("4")
+    elif(user_cache_prompt == "cache_dump"):
+        print("5")
+    elif(user_cache_prompt == "memory_dump"):
+        print("6")
+    elif(user_cache_prompt == "quit"):
+        print("0")
+    else:
+        print("-1")
 
 if __name__ == "__main__":
     main()
