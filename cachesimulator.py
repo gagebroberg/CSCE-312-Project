@@ -113,6 +113,8 @@ def main():
             is_hit = "No"
             if(cache_hit):
                 is_hit = "Yes"
+            else:
+                data = ramdict[search_address]
             print("hit:" + is_hit)
             print("ram_address:" + search_address)
             print("data:" + data)
