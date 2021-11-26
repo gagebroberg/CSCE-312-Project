@@ -98,7 +98,16 @@ def main():
             d_offset = int(binary_offset, 2)
             print("set:" + str(d_set))
             print("tag:" + str(d_tag))
-            cache_search = cache_data[d_set][d_tag][d_offset] # I don't think this is the correct way to search througn the cache
+            cache_hit = False
+            search_address = -1 #initializing the search address
+            for data_line in cache_data[d_set]:
+                tag_bits = data_line[1:num_tag_bits+1]
+                if (tag_bits == binary_tag):
+                    cache_hit == true
+                if (data_line[0] != 1):
+                    cache_hit == false
+                if(cache_hit):
+                    search_address = data_line[num_tag_bits + 1 + d_offset]
             is_hit = "Yes"
             if(cache_search == -1):
                 is_hit = "No"
