@@ -93,7 +93,7 @@ def main():
     global num_tag_bits
     num_tag_bits = num_address_bits - (num_block_offset_bits + num_set_index_bits)      #t
     global cache_data
-    cache_data = [[['0' for x in range(num_valid_bits + num_tag_bits + data_block_size)] for y in range(associativity)] for z in range(number_of_sets)] #fill cache with -1's
+    cache_data = [[['00' for x in range(num_valid_bits + num_tag_bits + data_block_size)] for y in range(associativity)] for z in range(number_of_sets)] #fill cache with -1's
     print("cache successfully configured!")                          
     print_cache_menu()
     user_cache_prompt = input()
@@ -170,10 +170,11 @@ def process_user_input(user_cache_prompt): #handle each case
     elif(user_cache_prompt == "cache-write"):
         print("1")
     elif(user_cache_prompt == "cache-flush"):
-        for z in range(number_of_sets):
+        print(range(num_valid_bits + num_tag_bits + data_block_size))
+        for x in range(number_of_sets):
             for y in range(associativity):
-                for x in range(num_valid_bits + num_tag_bits + data_block_size):
-                    cache_data[x][y][z] = '0'
+                for z in range(num_valid_bits + num_tag_bits + data_block_size):
+                    cache_data[x][y][z] = '00'
         print("cache_cleared")
     elif(user_cache_prompt == "cache-view"):
         print("cache_size:" + str(cache_size))
@@ -184,6 +185,13 @@ def process_user_input(user_cache_prompt): #handle each case
         print("write_miss_policy:" + str(write_miss_policy_dict[write_miss_policy]))
         print("number_of_cache_hits:" + str(number_of_cache_hits))
         print("number_of_cache_misses:" + str(number_of_cache_misses))
+        print("cache_content:")
+        for x in range(number_of_sets):
+            for y in range(associativity):
+                for z in range(num_valid_bits + num_tag_bits, num_valid_bits + num_tag_bits + data_block_size):
+                    # Need to print the valid and dirty bit as well
+                    print(cache_data[x][y][z] + " ", end="")
+                print()    
     elif(user_cache_prompt == "memory-view"):
         print("4")
     elif(user_cache_prompt == "cache_dump"):
