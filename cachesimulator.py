@@ -124,7 +124,7 @@ def main():
             for z in range(number_of_sets):
                 for y in range(associativity):
                     for x in range(num_valid_bits + num_tag_bits + data_block_size):
-                        cache_data = '0'
+                        cache_data[x][y][z] = '0'
             print("2")
         elif(user_cache_prompt == "cache-view"):
             print("3")
