@@ -57,7 +57,7 @@ def main():
     replacement_policy = int(input("replacement policy: "))    #use later
     write_hit_policy = int(input("write hit policy: "))        #use later
     write_miss_policy = int(input("write miss policy: "))      #use later
-    cache_data = [[['-1' for col in range(num_valid_bits + num_tag_bits + data_block_size)] for col in range(associativity)] for col in range(number_of_sets)] #fill cache with -1's
+    cache_data = [[['0' for col in range(num_valid_bits + num_tag_bits + data_block_size)] for col in range(associativity)] for col in range(number_of_sets)] #fill cache with -1's
     print(cache_data) ################# REMOVE LATER (test that dimensions are correct)
     print("cache successfully configured!")
     ##########################################################################################
@@ -108,7 +108,7 @@ def main():
                     cache_hit == False
                 if(cache_hit):
                     data = data_line[num_tag_bits + 1 + d_offset]
-            if(data == -1):
+            if(data == "0"):
                 cache_hit = False
             is_hit = "No"
             if(cache_hit):
@@ -121,6 +121,8 @@ def main():
         elif(user_cache_prompt == "cache-write"):
             print("1")
         elif(user_cache_prompt == "cache-flush"):
+            for x in range(number_of_sets):
+                for y in range()
             print("2")
         elif(user_cache_prompt == "cache-view"):
             print("3")
