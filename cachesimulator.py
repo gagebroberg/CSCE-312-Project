@@ -114,7 +114,7 @@ def main():
             if(cache_hit):
                 is_hit = "Yes"
             else:
-                data = ramdict[search_address]
+                data = ramdict[decimal_search_address]
             print("hit:" + is_hit)
             print("ram_address:" + search_address)
             print("data:" + data)
