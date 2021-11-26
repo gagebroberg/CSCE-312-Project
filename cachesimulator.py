@@ -125,7 +125,7 @@ def main():
                 for y in range(associativity):
                     for x in range(num_valid_bits + num_tag_bits + data_block_size):
                         cache_data[x][y][z] = '0'
-            print("2")
+            print("cache_cleared")
         elif(user_cache_prompt == "cache-view"):
             print("3")
         elif(user_cache_prompt == "memory-view"):
