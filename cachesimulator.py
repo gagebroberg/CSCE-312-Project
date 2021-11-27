@@ -204,15 +204,15 @@ def process_user_input(user_cache_prompt): #handle each case
           
     elif(user_cache_prompt == "memory-view"): #print all the memory in ramdict in lines of 8
         memory_size = len(ramdict)
-        print("memory_size:" + memory_size + "\n") #formatting
-        print("memory_content:" + "\n")            
-        print("address:data \n")
+        print("memory_size:" + str(memory_size)) #formatting
+        print("memory_content:")            
+        print("address:data")
         for i in range(0, memory_size, 8):    #traverse the memory 8 blocks of data at a time
-            hex_address = hex(i)              
-            print(hex_address + ":")          #print the address for the line of memory every 8 blocks (in hexadecimal)
-            for j in range(0, 7):
-                print(ramdict[i+j] + " ", end="")#print the memory in nested loop up to 7, so all memory is printed (i + j where j = 8 would just be the next sequence of i)
-            print()                           
+            hex_address = hex(i)
+            print(hex_address + ":", end="")          #print the address for the line of memory every 8 blocks (in hexadecimal)
+            for j in range(0, 8):
+                print(ramdict[i+j].strip(), end=" ")#print the memory in nested loop up to 7, so all memory is printed (i + j where j = 8 would just be the next sequence of i)
+            print()                          
     
     elif(user_cache_prompt == "cache_dump"):
         cache_file = open("cache.txt", 'w')    #open cache_file
