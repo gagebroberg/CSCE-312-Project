@@ -233,9 +233,13 @@ def process_user_input(user_cache_prompt): #handle each case
         ram_file.close()                        #close ram_file
     
     elif(user_cache_prompt == "quit"):
-        print()                           #do nothing
+        pass                              #Do nothing
+
     else:
-        print("-1")                       #Error, invalid input
+        print("Invalid input. Select one of the following inputs:")
+        print_cache_menu()
+        user_cache_prompt = input()
+        process_user_input(user_cache_prompt)
 
 if __name__ == "__main__":
     main()
