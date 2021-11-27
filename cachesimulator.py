@@ -223,13 +223,13 @@ def process_user_input(user_cache_prompt): #handle each case
             for y in range(associativity):     #for the last loop we only want to write the physical data into cache_file
                 for z in range(num_valid_bits + num_dirty_bits + num_tag_hex_pairs, num_valid_bits + num_dirty_bits + num_tag_hex_pairs + data_block_size):
                     cache_file.write(cache_data[x][y][z] + " ")
-                cache_file.write("\n")    
+                cache_file.write("\n")
         cache_file.close()                     #close cache_file
     
-    elif(user_cache_prompt == "memory_dump"):
+    elif(user_cache_prompt == "memory-dump"):
         ram_file = open("ram.txt", 'w')         #open ram_file
         for i in range(len(ramdict)):           #iterate through memory dictionary
-            ram_file.write(ramdict[i] + "\n")   #write each memory line to ram.txt with a newline
+            ram_file.write(ramdict[i])   #write each memory line to ram.txt with a newline
         ram_file.close()                        #close ram_file
     
     elif(user_cache_prompt == "quit"):
