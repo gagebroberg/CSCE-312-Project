@@ -35,6 +35,7 @@ num_set_index_bits = 0
 num_tag_bits = 0
 num_valid_bits = 1
 num_dirty_bits = 1
+num_tag_hex_pairs = 1
 cache_data = list()
 
 def main():
@@ -93,10 +94,11 @@ def main():
     num_set_index_bits = int(math.log(number_of_sets, 2))                               #s
     global num_tag_bits
     num_tag_bits = num_address_bits - (num_block_offset_bits + num_set_index_bits)      #t
+    print(range(1 + data_block_size))
     global cache_data
     cache_data = [
                     [
-                        ['0' if x < 2 else '00' for x in range(num_valid_bits + num_dirty_bits + num_tag_bits + data_block_size)
+                        ['0' if x < 2 else '00' for x in range(num_valid_bits + num_dirty_bits + num_tag_hex_pairs + data_block_size)
                         ] for y in range(associativity)
                         ] for z in range(number_of_sets)
                         ] #fill cache with 00's
@@ -196,10 +198,11 @@ def process_user_input(user_cache_prompt): #handle each case
         print("cache_content:")
         for x in range(number_of_sets):
             for y in range(associativity):
-                print(cache_data[x][y][0] + " ", end="")
-                print(cache_data[x][y][1] + " ", end="")
-                for z in range(num_valid_bits + num_dirty_bits, num_valid_bits + num_dirty_bits + num_tag_bits + data_block_size):
-                    print(cache_data[x][y][z] + " ", end="")
+                print(cache_data[x][y][0] + " ", end="") # valid bit
+                print(cache_data[x][y][1] + " ", end="") # dirty bit
+                print(cache_data[x][y][2] + " ", end="") # tag in hex
+                for z in range(num_valid_bits + num_dirty_bits + num_tag_hex_pairs, num_valid_bits + num_dirty_bits + num_tag_hex_pairs + data_block_size):
+                    print(cache_data[x][y][z] + " ", end="") # data block
                 print()  
           
     elif(user_cache_prompt == "memory-view"): #print all the memory in ramdict in lines of 8
@@ -214,12 +217,12 @@ def process_user_input(user_cache_prompt): #handle each case
                 print(ramdict[i+j].strip(), end=" ")#print the memory in nested loop up to 7, so all memory is printed (i + j where j = 8 would just be the next sequence of i)
             print()                          
     
-    elif(user_cache_prompt == "cache_dump"):
+    elif(user_cache_prompt == "cache-dump"):
         cache_file = open("cache.txt", 'w')    #open cache_file
         for x in range(number_of_sets):
             for y in range(associativity):     #for the last loop we only want to write the physical data into cache_file
-                for z in range(num_valid_bits + num_tag_bits, num_valid_bits + num_tag_bits, num_valid_bits + num_tag_bits + data_block_size):
-                    cache_file.write(cache_data[x][y][z] + " ", end="")   ####################################### DOES THIS WORK AS INTENDED ???############
+                for z in range(num_valid_bits + num_dirty_bits + num_tag_hex_pairs, num_valid_bits + num_dirty_bits + num_tag_hex_pairs + data_block_size):
+                    cache_file.write(cache_data[x][y][z] + " ")
                 cache_file.write("\n")    
         cache_file.close()                     #close cache_file
     
