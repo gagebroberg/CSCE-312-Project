@@ -12,7 +12,7 @@ import sys
 
 #dictionaries
 ramdict = {} #ram memory dictionary
-repl_policy_dict = {1:'random_replacement', 2:'least_recently_used'}
+repl_policy_dict = {1:'random_replacement', 2:'least_recently_used', 3:'least_frequently_used'}
 write_hit_policy_dict = {1:'write_through',2:'write_back'}
 write_miss_policy_dict = {1:'write_allocate',2:'no_write_allocate'}
 
@@ -34,6 +34,7 @@ num_block_offset_bits = 0
 num_set_index_bits = 0
 num_tag_bits = 0
 num_valid_bits = 1
+num_dirty_bits = 1
 cache_data = list()
 
 def main():
@@ -93,7 +94,13 @@ def main():
     global num_tag_bits
     num_tag_bits = num_address_bits - (num_block_offset_bits + num_set_index_bits)      #t
     global cache_data
-    cache_data = [[['00' for x in range(num_valid_bits + num_tag_bits + data_block_size)] for y in range(associativity)] for z in range(number_of_sets)] #fill cache with -1's
+    cache_data = [
+                    [
+                        ['0' if x < 2 else '00' for x in range(num_valid_bits + num_dirty_bits + num_tag_bits + data_block_size)
+                        ] for y in range(associativity)
+                        ] for z in range(number_of_sets)
+                        ] #fill cache with 00's
+    print(cache_data)
     print("cache successfully configured!")                          
     print_cache_menu()
     user_cache_prompt = input()
@@ -188,8 +195,9 @@ def process_user_input(user_cache_prompt): #handle each case
         print("cache_content:")
         for x in range(number_of_sets):
             for y in range(associativity):
-                for z in range(num_valid_bits + num_tag_bits, num_valid_bits + num_tag_bits + data_block_size):
-                    # Need to print the valid and dirty bit as well
+                print(cache_data[x][y][0] + " ", end="")
+                print(cache_data[x][y][1] + " ", end="")
+                for z in range(num_valid_bits + num_dirty_bits, num_valid_bits + num_dirty_bits + num_tag_bits + data_block_size):
                     print(cache_data[x][y][z] + " ", end="")
                 print()    
     elif(user_cache_prompt == "memory-view"):
