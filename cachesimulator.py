@@ -176,6 +176,7 @@ def process_user_input(user_cache_prompt): #handle each case
                 for z in range(num_valid_bits + num_tag_bits + data_block_size):
                     cache_data[x][y][z] = '00'
         print("cache_cleared")
+
     elif(user_cache_prompt == "cache-view"):
         print("cache_size:" + str(cache_size))
         print("data_block_size:" + str(data_block_size))
@@ -191,17 +192,39 @@ def process_user_input(user_cache_prompt): #handle each case
                 for z in range(num_valid_bits + num_tag_bits, num_valid_bits + num_tag_bits + data_block_size):
                     # Need to print the valid and dirty bit as well
                     print(cache_data[x][y][z] + " ", end="")
-                print()    
-    elif(user_cache_prompt == "memory-view"):
-        print("4")
+                print()  
+          
+    elif(user_cache_prompt == "memory-view"): #print all the memory in ramdict in lines of 8
+        memory_size = len(ramdict)
+        print("memory_size:" + memory_size + "\n") #formatting
+        print("memory_content:" + "\n")            
+        print("address:data \n")
+        for i in range(0, memory_size, 8):    #traverse the memory 8 blocks of data at a time
+            hex_address = hex(i)              
+            print(hex_address + ":")          #print the address for the line of memory every 8 blocks (in hexadecimal)
+            for j in range(0, 7):
+                print(ramdict[i+j] + " ", end="")#print the memory in nested loop up to 7, so all memory is printed (i + j where j = 8 would just be the next sequence of i)
+            print()                           
+    
     elif(user_cache_prompt == "cache_dump"):
-        print("5")
+        cache_file = open("cache.txt", 'w')    #open cache_file
+        for x in range(number_of_sets):
+            for y in range(associativity):     #for the last loop we only want to write the physical data into cache_file
+                for z in range(num_valid_bits + num_tag_bits, num_valid_bits + num_tag_bits, num_valid_bits + num_tag_bits + data_block_size):
+                    cache_file.write(cache_data[x][y][z] + " ", end="")   ####################################### DOES THIS WORK AS INTENDED ???############
+                cache_file.write("\n")    
+        cache_file.close()                     #close cache_file
+    
     elif(user_cache_prompt == "memory_dump"):
-        print("6")
+        ram_file = open("ram.txt", 'w')         #open ram_file
+        for i in range(len(ramdict)):           #iterate through memory dictionary
+            ram_file.write(ramdict[i] + "\n")   #write each memory line to ram.txt with a newline
+        ram_file.close()                        #close ram_file
+    
     elif(user_cache_prompt == "quit"):
-        print("0")
+        print()                           #do nothing
     else:
-        print("-1")
+        print("-1")                       #Error, invalid input
 
 if __name__ == "__main__":
     main()
