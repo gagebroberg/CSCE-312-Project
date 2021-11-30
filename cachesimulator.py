@@ -217,6 +217,16 @@ def process_user_input(user_cache_prompt): #handle each case
             write_hit = "yes"
             ram_address = address
             eviction_line = dec_address
+            #write the new cache in?
+            for data_line in  cache_data[d_set]:
+                cache_data[d_set][data_line][1+num_tag_bits + d_offset] = data #update the data BUT WHERE IS IT UPDATED IF THE CACHE HIT MISSES?
+        else:
+            for data_line in cache_data[d_set]:
+                tag_bits = data_line[1:num_tag_bits + 1]
+                if(tag_bits == cache_tag and data_line[0] == 1):
+                    cache_data[d_set][data_line][num_tag_bits + 1 + d_offset] = data #update the data at cache_hit location
+                
+
         print("write_hit:" + write_hit)
         print("eviction_line" + eviction_line)
         print("ram_address" + ram_address)
