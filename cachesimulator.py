@@ -8,6 +8,7 @@
 
 import numpy
 import math
+import random
 import sys
 
 #dictionaries
@@ -94,7 +95,6 @@ def main():
     num_set_index_bits = int(math.log(number_of_sets, 2))                               #s
     global num_tag_bits
     num_tag_bits = num_address_bits - (num_block_offset_bits + num_set_index_bits)      #t
-    print(range(1 + data_block_size))
     global cache_data
     cache_data = [
                     [
@@ -168,12 +168,36 @@ def process_user_input(user_cache_prompt): #handle each case
             number_of_cache_hits += 1
             eviction_line = '-1'
         else:
-            data = ramdict[decimal_search_address]
+            data = ramdict[decimal_search_address].strip()
             global number_of_cache_misses
             number_of_cache_misses += 1
             eviction_line = '-1'
         print("hit:" + is_hit)
-        print("eviction_line:" + eviction_line)
+        # If we get a miss, then we need to replace a line in cache using the replacement policy specified
+        if (not cache_hit): # cache miss
+            # random replacement
+            if (replacement_policy == 1):
+                print("RR") # Denotes random replacement; remove later
+                randset = random.randrange(0, number_of_sets) # set to replace from
+                randline = random.randrange(0, associativity) # line in the set to replace from
+                randoffset = random.randrange(0, 8) # offset to replace from
+                eviction_line = int(str(randset) + str(randline), 2) # overall line to replace from
+                print(cache_data[randset][randline])
+                cache_data[randset][randline][0] = '1' # set the valid bit to 1
+                # next four lines make sure that the tag has two hexadecimal digits
+                tag_hex = hex(d_tag).split("x")[1]
+                while len(tag_hex) != 2:
+                    tag_hex = '0' + tag_hex
+                cache_data[randset][randline][2] = tag_hex # set the tag to the search address tag
+                
+
+            # # least recently used
+            # if (replacement_policy == 2):
+            print(cache_data)
+
+        else: # cache hit
+            eviction_line = -1
+        print("eviction_line:" + str(eviction_line))
         print("ram_address:" + "0x" + search_address)
         print("data:" + "0x" + data)
     elif(user_cache_prompt == "cache-write"):
