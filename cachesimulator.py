@@ -261,8 +261,11 @@ def process_user_input(user_cache_prompt): #handle each case
         print(range(num_valid_bits + num_tag_bits + data_block_size))
         for x in range(number_of_sets):
             for y in range(associativity):
-                for z in range(num_valid_bits + num_tag_bits + data_block_size):
-                    cache_data[x][y][z] = '00'
+                for z in range(num_valid_bits + num_tag_bits + num_dirty_bits + data_block_size):
+                    if(z < 2):
+                        cache_data[x][y][z] = '0'
+                    else:
+                        cache_data[x][y][z] = '00'
         print("cache_cleared")
 
     elif(user_cache_prompt == "cache-view"):
