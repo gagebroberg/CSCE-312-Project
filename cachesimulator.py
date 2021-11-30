@@ -181,7 +181,6 @@ def process_user_input(user_cache_prompt): #handle each case
                 print("RR") # Denotes random replacement; remove later
                 randset = random.randrange(0, number_of_sets) # set to replace from
                 randline = random.randrange(0, associativity) # line in the set to replace from
-                randoffset = random.randrange(0, 8) # offset to replace from
                 eviction_line = int(str(randset) + str(randline), 2) # overall line to replace from
                 print(cache_data[randset][randline])
                 cache_data[randset][randline][0] = '1' # set the valid bit to 1
@@ -201,17 +200,17 @@ def process_user_input(user_cache_prompt): #handle each case
         print("eviction_line:" + str(eviction_line))
         print("ram_address:" + "0x" + search_address)
         print("data:" + "0x" + data)
-    elif(user_cache_prompt == "cache-write"):
-        data = input()
-        address = input()
-        newaddress = address.split()[1].split("x")[1]
+    elif("cache-write" in user_cache_prompt):
+        data = user_cache_prompt.split()[1]
+        address = user_cache_prompt.split()[2]
+        newaddress = address.split("x")[1]
         dec_address = int(newaddress, 16)
         bin_address = bin(dec_address)
         bin_address = bin_address[2:]
         bin_string = str(bin_address)
         bin_str_len = len(bin_string)
         bin_str_len = 8 - bin_str_len  ################################## SEE LINE 141
-        for _ in bin_str_len:
+        for _ in range(bin_str_len):
             bin_string = '0' + bin_string
         cache_tag = bin_string[ : num_tag_bits] #index for bits
         cache_set = bin_string[num_tag_bits : num_tag_bits + num_set_index_bits]
@@ -220,6 +219,7 @@ def process_user_input(user_cache_prompt): #handle each case
         d_set = int(cache_set, 2)
         d_offset = int(cache_offset, 2)
         cache_hit = False
+        retrieved_data = '0'
         for data_line in cache_data[d_set]:
             tag_bits = data_line[1:num_tag_bits+1] #check tag_bits 
             if(tag_bits == cache_tag):
@@ -231,11 +231,11 @@ def process_user_input(user_cache_prompt): #handle each case
                 break
         if(retrieved_data == '0'):
             cache_hit = False
-        print("set:" + d_set)
-        print("tag:" + d_tag)
+        print("set:" + str(d_set))
+        print("tag:" + str(d_tag))
         write_hit = "yes"
         eviction_line = -1
-        dirty_bit = 0
+        dirty_bit = '0'
         ram_address = "-1"
         if(cache_hit == False):
             write_hit = "yes"
@@ -243,22 +243,17 @@ def process_user_input(user_cache_prompt): #handle each case
             eviction_line = dec_address
             #write the new cache in?
             for data_line in  cache_data[d_set]:
-                cache_data[d_set][data_line][1+num_tag_bits + d_offset] = data #update the data BUT WHERE IS IT UPDATED IF THE CACHE HIT MISSES?
+                data_line[1+num_tag_bits + d_offset] = data #update the data BUT WHERE IS IT UPDATED IF THE CACHE HIT MISSES?
         else:
             for data_line in cache_data[d_set]:
                 tag_bits = data_line[1:num_tag_bits + 1]
                 if(tag_bits == cache_tag and data_line[0] == 1):
-                    cache_data[d_set][data_line][num_tag_bits + 1 + d_offset] = data #update the data at cache_hit location
+                    data_line[num_tag_bits + 1 + d_offset] = data #update the data at cache_hit location
                 
-
         print("write_hit:" + write_hit)
-        print("eviction_line" + eviction_line)
-        print("ram_address" + ram_address)
-        print("data" + data)
-
-
-
-
+        print("eviction_line:" + str(eviction_line))
+        print("ram_address:" + ram_address)
+        print("data:" + data)
         print("dirty_bit:" + dirty_bit)
 
 
