@@ -138,7 +138,7 @@ def process_user_input(user_cache_prompt): #handle each case
         binary_search_address = binary_search_address[2:]
         bs_address_string = str(binary_search_address)
         stringlength = len(bs_address_string)
-        stringlength = 8 - stringlength
+        stringlength = 8 - stringlength  #################################### SHOULD THIS 8 BE A VARIABLE????
         for _ in range(0, stringlength): # making sure that the bin search address is at least 8 bits; must start at index 0; convention is to use _ if unused index
             bs_address_string = "0" + bs_address_string
         binary_tag = bs_address_string[:num_tag_bits] # tag bits defined previously
@@ -159,6 +159,7 @@ def process_user_input(user_cache_prompt): #handle each case
                 cache_hit == False
             if(cache_hit):
                 data = data_line[num_tag_bits + 1 + d_offset]
+                break               #iterative, the next iteration in the loop could suggest that the cache_hit is false, even though it's true
         if(data == '0'):
             cache_hit = False
         is_hit = "No"
@@ -201,7 +202,66 @@ def process_user_input(user_cache_prompt): #handle each case
         print("ram_address:" + "0x" + search_address)
         print("data:" + "0x" + data)
     elif(user_cache_prompt == "cache-write"):
-        print("1")
+        data = input()
+        address = input()
+        newaddress = address.split()[1].split("x")[1]
+        dec_address = int(newaddress, 16)
+        bin_address = bin(dec_address)
+        bin_address = bin_address[2:]
+        bin_string = str(bin_address)
+        bin_str_len = len(bin_string)
+        bin_str_len = 8 - bin_str_len  ################################## SEE LINE 141
+        for _ in bin_str_len:
+            bin_string = '0' + bin_string
+        cache_tag = bin_string[ : num_tag_bits] #index for bits
+        cache_set = bin_string[num_tag_bits : num_tag_bits + num_set_index_bits]
+        cache_offset = bin_string[num_tag_bits + num_set_index_bits: ]
+        d_tag = int(cache_tag, 2)
+        d_set = int(cache_set, 2)
+        d_offset = int(cache_offset, 2)
+        cache_hit = False
+        for data_line in cache_data[d_set]:
+            tag_bits = data_line[1:num_tag_bits+1] #check tag_bits 
+            if(tag_bits == cache_tag):
+                cache_hit = True
+            if(data_line[0] != 1):
+                cache_hit = False
+            if(cache_hit):
+                retrieved_data = data_line[num_tag_bits + 1 + d_offset]
+                break
+        if(retrieved_data == '0'):
+            cache_hit = False
+        print("set:" + d_set)
+        print("tag:" + d_tag)
+        write_hit = "yes"
+        eviction_line = -1
+        dirty_bit = 0
+        ram_address = "-1"
+        if(cache_hit == False):
+            write_hit = "yes"
+            ram_address = address
+            eviction_line = dec_address
+            #write the new cache in?
+            for data_line in  cache_data[d_set]:
+                cache_data[d_set][data_line][1+num_tag_bits + d_offset] = data #update the data BUT WHERE IS IT UPDATED IF THE CACHE HIT MISSES?
+        else:
+            for data_line in cache_data[d_set]:
+                tag_bits = data_line[1:num_tag_bits + 1]
+                if(tag_bits == cache_tag and data_line[0] == 1):
+                    cache_data[d_set][data_line][num_tag_bits + 1 + d_offset] = data #update the data at cache_hit location
+                
+
+        print("write_hit:" + write_hit)
+        print("eviction_line" + eviction_line)
+        print("ram_address" + ram_address)
+        print("data" + data)
+
+
+
+
+        print("dirty_bit:" + dirty_bit)
+
+
     elif(user_cache_prompt == "cache-flush"):
         print(range(num_valid_bits + num_tag_bits + data_block_size))
         for x in range(number_of_sets):
