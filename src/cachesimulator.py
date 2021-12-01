@@ -196,7 +196,7 @@ def print_cache_menu():
     print("1. cache-read")
     print("2. cache-write")
     print("3. cache-flush")
-    print("4. cache-view")
+    print("4. cache-view")#boop bop
     print("5. memory-view")
     print("6. cache-dump")
     print("7. memory-dump")
