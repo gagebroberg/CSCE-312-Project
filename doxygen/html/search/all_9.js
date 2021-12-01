@@ -1,7 +1,9 @@
 var searchData=
 [
-  ['write_5fhit_5fpolicy_0',['write_hit_policy',['../namespacecachesimulator.html#ae5f15350294e220e840951d5411a3bbc',1,'cachesimulator']]],
-  ['write_5fhit_5fpolicy_5fdict_1',['write_hit_policy_dict',['../namespacecachesimulator.html#a12bd9092f3e65b57f8ba0af344d58925',1,'cachesimulator']]],
-  ['write_5fmiss_5fpolicy_2',['write_miss_policy',['../namespacecachesimulator.html#ac6b8da46d1750307bae769ea1f89aa81',1,'cachesimulator']]],
-  ['write_5fmiss_5fpolicy_5fdict_3',['write_miss_policy_dict',['../namespacecachesimulator.html#a1512d9ebcfd25163a422bd6d8e3d0d1d',1,'cachesimulator']]]
+  ['ramdict_0',['ramdict',['../namespacecachesimulator.html#ad14bede58d0bf01a49b75641a94f9e33',1,'cachesimulator']]],
+  ['random_5freplacement_1',['random_replacement',['../namespacecachesimulator.html#a84a5d0edc73fd63da60f74fd0f372657',1,'cachesimulator']]],
+  ['recently_5fused_2',['recently_used',['../namespacecachesimulator.html#a5c2979b176312f0dc1e7cd72b7fc237c',1,'cachesimulator']]],
+  ['repl_5fpolicy_5fdict_3',['repl_policy_dict',['../namespacecachesimulator.html#aa756d76efeca3e5986c82699df649ea7',1,'cachesimulator']]],
+  ['replacement_5fpolicy_4',['replacement_policy',['../namespacecachesimulator.html#a1c94a6dfe26bb53fc8779a3674f000a9',1,'cachesimulator']]],
+  ['rotate_5',['rotate',['../namespacecachesimulator.html#aea8c2455422806dba2911efcd3412130',1,'cachesimulator']]]
 ];

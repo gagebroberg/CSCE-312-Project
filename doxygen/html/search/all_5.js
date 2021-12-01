@@ -1,5 +1,5 @@
 var searchData=
 [
-  ['main_0',['main',['../namespacecachesimulator.html#a1ea345601d6fb5f545e59e1b69b1b306',1,'cachesimulator']]],
-  ['max_5fmemory_5faddresses_1',['max_memory_addresses',['../namespacecachesimulator.html#a93a5824b8bdeb402b2d0dd2bed89cd6e',1,'cachesimulator']]]
+  ['least_5ffrequently_5fused_0',['least_frequently_used',['../namespacecachesimulator.html#a6df9268b37979a64ec7581aa3a0a2f17',1,'cachesimulator']]],
+  ['least_5frecently_5fused_1',['least_recently_used',['../namespacecachesimulator.html#a62a384551a7e0fbbdcf43a64f1d67cfb',1,'cachesimulator']]]
 ];
