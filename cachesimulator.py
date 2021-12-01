@@ -182,14 +182,17 @@ def process_user_input(user_cache_prompt): #handle each case
                 randset = random.randrange(0, number_of_sets) # set to replace from
                 randline = random.randrange(0, associativity) # line in the set to replace from
                 eviction_line = int(str(randset) + str(randline), 2) # overall line to replace from
-                print(cache_data[randset][randline])
                 cache_data[randset][randline][0] = '1' # set the valid bit to 1
                 # next four lines make sure that the tag has two hexadecimal digits
                 tag_hex = hex(d_tag).split("x")[1]
                 while len(tag_hex) != 2:
                     tag_hex = '0' + tag_hex
                 cache_data[randset][randline][2] = tag_hex # set the tag to the search address tag
-                
+                ram_block = get_ram_block(decimal_search_address)
+                counter = 3
+                for byte in ram_block:
+                    cache_data[randset][randline][counter] = byte
+                    counter += 1
 
             # # least recently used
             # if (replacement_policy == 2):
@@ -319,6 +322,17 @@ def process_user_input(user_cache_prompt): #handle each case
         print_cache_menu()
         user_cache_prompt = input()
         process_user_input(user_cache_prompt)
+
+# This function takes in the search address and returns a list with the 8 byte block in ram surrounding the address
+# as well as what the offset will be to access the specified data
+def get_ram_block(dec_ram_address):
+    lower_bound = 0
+    while (lower_bound + 8) < dec_ram_address:
+        lower_bound = lower_bound + 8
+    ram_block = list()
+    for i in range(lower_bound, lower_bound + 8):
+        ram_block.append(ramdict[i].strip())
+    return ram_block
 
 if __name__ == "__main__":
     main()
