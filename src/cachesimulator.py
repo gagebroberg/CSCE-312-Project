@@ -400,7 +400,7 @@ def process_user_input(user_cache_prompt): #handle each case
             eviction_line = dec_address / 8 #eviction lines come in terms of 8
             #write the new cache in?
             if(write_miss_policy == 1): #cache miss write allocate
-                data = retrieved_data #load the data from RAM
+                data = ramdict[dec_address] #load the data from RAM
                 """
                 for data_line in  cache_data[d_set]:
                     data_line_index += 1
