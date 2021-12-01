@@ -6,15 +6,18 @@
 #Description: In this lab, we wrote a program which simulates a cache memory. It consists of taking an input file for memory,
 #and prompting the user for inputs. We then use the inputs for updating, deleting, and printing cache memory.
 
-'''@package cachesimulator'''
-
-import numpy
 import math
 import random
 import sys
 
-#dictionaries
-ramdict = {} #ram memory dictionary
+# Dictionaries
+###########################################################################################
+## The ram dictionary stores the ram data with line numbers being keys
+# and the hex values at those line numbers as values.
+ramdict = {}
+## This is the replacement policy dictionary that stores the options for replacement. 
+# This allows for easy conversion from the number entered by the user to the string
+# representation of the replacement policy.
 repl_policy_dict = {1:'random_replacement', 2:'least_recently_used', 3:'least_frequently_used'}
 write_hit_policy_dict = {1:'write_through',2:'write_back'}
 write_miss_policy_dict = {1:'write_allocate',2:'no_write_allocate'}
@@ -43,6 +46,11 @@ cache_data = list(list(list()))
 frequently_used = list(list(list()))
 recently_used = list()
 
+## This is the main function that runs the entire program.  
+# It takes a command line argument to obtain the file path to the 
+# ram input data. This input data is then used to configure the ram.
+# Then user input is used to configure the cache. The user can then 
+# request different actions to be performed on the cache.
 def main():
     #Initialize Physical memory
     ###########################################################################################
@@ -396,8 +404,11 @@ def process_user_input(user_cache_prompt): #handle each case
         user_cache_prompt = input()
         process_user_input(user_cache_prompt)
 
-# This function takes in the search address and returns a list with the 8 byte block in ram surrounding the address
+
+## This function takes in the search address and returns a list with the 8 byte block in ram surrounding the address
 # as well as what the offset will be to access the specified data
+# @param[in] dec_ram_address The decimal ram address to pull the ram block from.
+# @return An 8-byte block containing the specified ram address.
 def get_ram_block(dec_ram_address):
     lower_bound = 0
     while (lower_bound + 8) < dec_ram_address:
@@ -407,9 +418,11 @@ def get_ram_block(dec_ram_address):
         ram_block.append(ramdict[i].strip())
     return ram_block
 
-# This function rotates the elements of an array once
-def rotate(l):
-    return l[1:] + l[:1]
+## This function rotates the elements of an array once. For example, [0, 1, 2, 3] -> [1, 2, 3, 0].
+# @param[in] list The list to rotate.
+# @return The new list that has been rotated.
+def rotate(list):
+    return list[1:] + list[:1]
 
 if __name__ == "__main__":
     main()
