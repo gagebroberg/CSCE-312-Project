@@ -159,10 +159,11 @@ def process_user_input(user_cache_prompt): #handle each case
         binary_set = bs_address_string[num_tag_bits:num_tag_bits + num_set_index_bits] # from end of tag bits to end of set bits
         binary_offset = bs_address_string[num_tag_bits + num_set_index_bits:] # from the end of set bets to the end of the address
         d_tag = int(binary_tag, 2)
+        h_tag = hex(d_tag).split('x')[1]
         d_set = int(binary_set, 2)
         d_offset = int(binary_offset, 2)
         print("set:" + str(d_set))
-        print("tag:" + str(d_tag))
+        print("tag:" + h_tag)
         cache_hit = False
         data = -1 #initializing the search address
         for data_line in cache_data[d_set]:
@@ -285,6 +286,7 @@ def process_user_input(user_cache_prompt): #handle each case
         cache_set = bin_string[num_tag_bits : num_tag_bits + num_set_index_bits]
         cache_offset = bin_string[num_tag_bits + num_set_index_bits: ]
         d_tag = int(cache_tag, 2)
+        h_tag = hex(d_tag).split('x')[1]
         d_set = int(cache_set, 2)
         d_offset = int(cache_offset, 2)
         cache_hit = False
@@ -301,7 +303,7 @@ def process_user_input(user_cache_prompt): #handle each case
         if(retrieved_data == '0'):
             cache_hit = False
         print("set:" + str(d_set))
-        print("tag:" + str(d_tag))
+        print("tag:" + h_tag)
         write_hit = "yes"
         eviction_line = -1
         dirty_bit = '0'
