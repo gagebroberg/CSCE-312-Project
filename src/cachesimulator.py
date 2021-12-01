@@ -213,7 +213,7 @@ def process_user_input(user_cache_prompt): #handle each case
         binary_search_address = binary_search_address[2:]
         bs_address_string = str(binary_search_address)
         stringlength = len(bs_address_string)
-        stringlength = 8 - stringlength  #################################### SHOULD THIS 8 BE A VARIABLE????
+        stringlength = 8 - stringlength
         for _ in range(0, stringlength): # making sure that the bin search address is at least 8 bits; must start at index 0; convention is to use _ if unused index
             bs_address_string = "0" + bs_address_string
         binary_tag = bs_address_string[:num_tag_bits] # tag bits defined previously
@@ -264,7 +264,7 @@ def process_user_input(user_cache_prompt): #handle each case
                 while len(tag_hex) != 2:
                     tag_hex = '0' + tag_hex
                 cache_data[randset][randline][2] = tag_hex # set the tag to the search address tag
-                ram_block = get_ram_block(decimal_search_address)
+                ram_block = get_ram_block(decimal_search_address, data_block_size)
                 counter = 3
                 for byte in ram_block:
                     cache_data[randset][randline][counter] = byte
@@ -288,7 +288,7 @@ def process_user_input(user_cache_prompt): #handle each case
                 while len(tag_hex) != 2:
                     tag_hex = '0' + tag_hex
                 cache_data[least_rec_set][least_rec_line][2] = tag_hex # set the tag to the search address tag
-                ram_block = get_ram_block(decimal_search_address)
+                ram_block = get_ram_block(decimal_search_address, data_block_size)
                 counter = 3
                 for byte in ram_block:
                     cache_data[least_rec_set][least_rec_line][counter] = byte
@@ -316,7 +316,7 @@ def process_user_input(user_cache_prompt): #handle each case
                 while len(tag_hex) != 2:
                     tag_hex = '0' + tag_hex
                 cache_data[least_freq_set][least_freq_line][2] = tag_hex # set the tag to the search address tag
-                ram_block = get_ram_block(decimal_search_address)
+                ram_block = get_ram_block(decimal_search_address, data_block_size)
                 counter = 3
                 for byte in ram_block:
                     cache_data[least_freq_set][least_freq_line][counter] = byte
