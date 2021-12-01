@@ -5,7 +5,9 @@
 #Email(s): armando.cruz22@tamu.edu , gagebroberg@tamu.edu
 #Description: In this lab, we wrote a program which simulates a cache memory. It consists of taking an input file for memory,
 #and prompting the user for inputs. We then use the inputs for updating, deleting, and printing cache memory.
-##This is a doxygen command
+
+'''@package cachesimulator'''
+
 import numpy
 import math
 import random
@@ -41,7 +43,6 @@ cache_data = list(list(list()))
 frequently_used = list(list(list()))
 recently_used = list()
 
-'''This is a doxygen comment'''
 def main():
     #Initialize Physical memory
     ###########################################################################################
