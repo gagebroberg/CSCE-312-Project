@@ -19,32 +19,80 @@ ramdict = {}
 # This allows for easy conversion from the number entered by the user to the string
 # representation of the replacement policy.
 repl_policy_dict = {1:'random_replacement', 2:'least_recently_used', 3:'least_frequently_used'}
+## This is the write hit policy dictionary that stores the options for how to handle write hits.
+# This allows for easy conversion from the number entered by the user to the string
+# representation of the write hit policy.
 write_hit_policy_dict = {1:'write_through',2:'write_back'}
+## This is the write miss policy dictionary that stores the options for how to handle write misses.
+# This allows for easy conversion from the number entered by the user to the string
+# representation of the write miss policy.
 write_miss_policy_dict = {1:'write_allocate',2:'no_write_allocate'}
+###########################################################################################
 
-# initializing globals for user input
+# Initializing globals for user input
+###########################################################################################
+## The size of the cache in bytes. This is configured by the user at runtime.
 cache_size = 0
+## The size of a block of data. This is configured by the user at runtime.
 data_block_size = 0
+## The number of lines in a set. This is configured by the user at runtime.
 associativity = 0 
+## The replacement policy. The user can enter 1, 2, or 3 which correspond to different replacement policies
+# These policies are held in the repl_policy_dict.
 replacement_policy = 0
+## The write hit policy policy. The user can enter 1 or 2 which correspond to different write hit policies
+# These policies are held in the write_hit_policy_dict.
 write_hit_policy = 0
+## The write miss policy policy. The user can enter 1 or 2 which correspond to different write miss policies
+# These policies are held in the write_miss_policy_dict.
 write_miss_policy = 0
-number_of_cache_hits = 0
-number_of_cache_misses = 0
+###########################################################################################
 
-#initializing calculated globals
+# Initializing calculated globals
+###########################################################################################
+## The number of sets in cache. This is calculated using user input. Specifically, this is
+# cache_size / (data_block_size * associativity)
 number_of_sets = 0
+## The number of memory addresses in ram. This is calculated using the number of lines in the 
+# ram input file. For this project that file is input.txt.
 max_memory_addresses = 0
+## The number of address bits. This is calculated as the log base 2 of max_memory_addresses.
 num_address_bits = 0
-num_block_offset_bits = 0
-num_set_index_bits = 0
+## The number of tag bits. This is calculated using the formula t = m - (b + s). For this
+# project this is num_address_bits = max_memory_addresses - (num_block_offset_bits + num_set_index_bits).
 num_tag_bits = 0
-num_valid_bits = 1
-num_dirty_bits = 1
-num_tag_hex_pairs = 1
+## The number of set index bits. This is calculated as the log base 2 of number_of_sets.
+num_set_index_bits = 0
+## The number of block offset bits. This is calculated as the log base 2 of data_block_size.
+num_block_offset_bits = 0
+## The number of times we have had a cache hit during runtime. Every time the user makes a read or write
+# that results in a cache hit, this number if incremented.
+number_of_cache_hits = 0
+## The number of times we have had a cache miss during runtime. Every time the user makes a read or write
+# that results in a cache miss, this number if incremented.
+number_of_cache_misses = 0
+## This is a triple nested list that represents our cache data. The first layer is the entire cache, the second
+# layer is the sets, and the third layer is each line within each set in the following format:
+# ['valid bit', 'dirty bit', 'tag hex bits', 'start of data block', ..., 'end of data block']
 cache_data = list(list(list()))
-frequently_used = list(list(list()))
+## This is the recently used list that helps calculate which of the lines in cache
+# was least recently used should the user enter '2' for the replacement policy.
 recently_used = list()
+## This is the frequently used triple nested list that helps calculate which of the lines in cache
+# was least frequently used should the user enter '3' for the replacement policy.
+frequently_used = list(list(list()))
+###########################################################################################
+
+# Static global variabels
+###########################################################################################
+## The number of valid bits. This is always 1. This variable helps with code readability and clarity. 
+num_valid_bits = 1
+## The number of dirty bits. This is always 1. This variable helps with code readability and clarity. 
+num_dirty_bits = 1
+## The number of hex pairs to represent a tag in cache. This is always 1. 
+# This variable helps with code readability and clarity. 
+num_tag_hex_pairs = 1
+###########################################################################################
 
 ## This is the main function that runs the entire program.  
 # It takes a command line argument to obtain the file path to the 
@@ -61,8 +109,10 @@ def main():
     data_file = open(path, 'r') #open file
     moredata = True
     memaddress = -1 #memaddress is the address used to access memory from dictionary
+    ###########################################################################################
 
     #Iterate through data file
+    ###########################################################################################
     while(moredata):
         memoryline = data_file.readline() #read in memory line by line
         if not memoryline: #if read unsuccesful, file is at the end, break
@@ -71,7 +121,6 @@ def main():
         memaddress += 1 #increment memory address, such that each index is unique
         ramdict[memaddress] = memoryline #store memoryline at memaddress
     data_file.close() #close the file
-
     print("init-ram 0x00 " + "0x%X" % memaddress) #print the size of ram memory
     print("RAM succesfully initialized!") #print once all data in file has been added to memory dictionary
     ##########################################################################################
@@ -135,12 +184,12 @@ def main():
         print_cache_menu()
         user_cache_prompt = input()
         process_user_input(user_cache_prompt)
-    
     ##########################################################################################
 
 #Simulate the cache
 ##########################################################################################
-#print menu
+
+## Prints the menu of options that the user is allowed to choose from.
 def print_cache_menu():
     print("*** Cache simulator menu ***")
     print("type one command:")
@@ -153,7 +202,9 @@ def print_cache_menu():
     print("7. memory-dump")
     print("8. quit")
     print("****************************")
+###########################################################################################
 
+## Processes the user input based on the menu option selected.
 def process_user_input(user_cache_prompt): #handle each case
     if("cache-read" in user_cache_prompt): # user must enter this command in the form "cache-read 0x___"
         search_address = user_cache_prompt.split()[1].split("x")[1] #grabbing hexadecimal value from search address
@@ -409,12 +460,12 @@ def process_user_input(user_cache_prompt): #handle each case
 # as well as what the offset will be to access the specified data
 # @param[in] dec_ram_address The decimal ram address to pull the ram block from.
 # @return An 8-byte block containing the specified ram address.
-def get_ram_block(dec_ram_address):
+def get_ram_block(dec_ram_address, data_block_size):
     lower_bound = 0
-    while (lower_bound + 8) < dec_ram_address:
-        lower_bound = lower_bound + 8
+    while (lower_bound + data_block_size) < dec_ram_address:
+        lower_bound = lower_bound + data_block_size
     ram_block = list()
-    for i in range(lower_bound, lower_bound + 8):
+    for i in range(lower_bound, lower_bound + data_block_size):
         ram_block.append(ramdict[i].strip())
     return ram_block
 
