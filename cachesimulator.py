@@ -37,7 +37,9 @@ num_tag_bits = 0
 num_valid_bits = 1
 num_dirty_bits = 1
 num_tag_hex_pairs = 1
-cache_data = list()
+cache_data = list(list(list()))
+frequently_used = list(list(list()))
+# recently_used = 
 
 def main():
     #Initialize Physical memory
@@ -100,9 +102,17 @@ def main():
                     [
                         ['0' if x < 2 else '00' for x in range(num_valid_bits + num_dirty_bits + num_tag_hex_pairs + data_block_size)
                         ] for y in range(associativity)
-                        ] for z in range(number_of_sets)
-                        ] #fill cache with 00's
+                    ] for z in range(number_of_sets)
+                ] #fill cache with 00's
     print(cache_data)
+    global frequently_used
+    frequently_used = [
+                        [
+                            [ 0       
+                            ] for y in range(associativity)
+                        ] for z in range(number_of_sets)
+                    ] # fill the recently used with 0's
+    print(frequently_used)
     print("cache successfully configured!")                          
     print_cache_menu()
     user_cache_prompt = input()
@@ -194,9 +204,40 @@ def process_user_input(user_cache_prompt): #handle each case
                     cache_data[randset][randline][counter] = byte
                     counter += 1
 
-            # # least recently used
-            # if (replacement_policy == 2):
+            # least recently used
+            elif (replacement_policy == 2):
+                print("LRU")
+                
+            # least frequently used
+            else:
+                print("LFU")
+                # logic to calculate least frequently use line
+                least_freq_set = 0
+                least_freq_line = 0
+                min_frequency = frequently_used[0][0][0]
+                for set_count, set in enumerate(frequently_used):
+                    for line_count, line in enumerate(set):
+                        if frequently_used[set_count][line_count][0] < min_frequency:
+                            min_frequency = frequently_used[set_count][line_count][0]
+                            least_freq_set = set_count
+                            least_freq_line = line_count
+                # Now that we have the line, we can use it to alter the data in line
+                eviction_line = int(str(least_freq_set) + str(least_freq_line), 2) # overall line to replace from
+                cache_data[least_freq_set][least_freq_line][0] = '1' # set the valid bit to 1
+                frequently_used[least_freq_set][least_freq_line][0] += 1
+                # next four lines make sure that the tag has two hexadecimal digits
+                tag_hex = hex(d_tag).split("x")[1]
+                while len(tag_hex) != 2:
+                    tag_hex = '0' + tag_hex
+                cache_data[least_freq_set][least_freq_line][2] = tag_hex # set the tag to the search address tag
+                ram_block = get_ram_block(decimal_search_address)
+                counter = 3
+                for byte in ram_block:
+                    cache_data[least_freq_set][least_freq_line][counter] = byte
+                    counter += 1
+                    
             print(cache_data)
+            print(frequently_used)
 
         else: # cache hit
             eviction_line = -1
