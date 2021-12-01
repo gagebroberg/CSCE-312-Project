@@ -343,14 +343,12 @@ def process_user_input(user_cache_prompt): #handle each case
             #write the new cache in?
             if(write_miss_policy == 1): #cache miss write allocate
                 data = ramdict[dec_address] #load the data from RAM
-                """
-                for data_line in  cache_data[d_set]:
-                    data_line_index += 1
-                    tag_bits = data_line[2 :num_tag_bits + 2]                            #IF THERE IS NO HIT, IT IS WRITTEN BASED ON REPLACEMENT POLICY?
-                    if(tag_bits == cache_tag and data_line[0] == 1):
-                        cache_data[d_set][data_line_index][num_tag_bits + 2 + d_offset] = data #update the data in cache_data
-                
-                """
+                if(replacement_policy == 1):
+                    eviction_line = random_replacement(dec_address, d_tag)  #cache miss write allocate random replacement
+                elif(replacement_policy == 2):
+                    eviction_line = least_recently_used(dec_address, d_tag) #cache miss write allocate recent replacement
+                else:
+                    eviction_line = least_frequently_used(dec_address, d_tag) #cache miss write allocate frequent replacement
             else: #cache miss no-write allocate
                 ramdict[dec_address] = data #update the data in RAM (do not load in cache)
 
