@@ -292,13 +292,14 @@ def process_user_input(user_cache_prompt): #handle each case
         d_tag = int(cache_tag, 2)
         d_set = int(cache_set, 2)
         d_offset = int(cache_offset, 2)
+        h_tag = hex(d_tag).split('x')[1]
 
         #determine if cache_hit
         cache_hit = False
         retrieved_data = '0'
         for data_line in cache_data[d_set]:        #iterate through cache_data[d_set]
-            tag_bits = data_line[2:num_tag_bits+2] #check tag_bits          each data_line is of the form [valid_bit][dirty_bit][tag_bits][data_blocks]
-            if(tag_bits == cache_tag and data_line[0] == 1): #CHECK FOR DIRTY BIT?
+            tag_instruction = data_line[2] #check tag         each data_line is of the form [valid_bit][dirty_bit][tag][data_blocks]
+            if(tag_instruction == h_tag and data_line[0] == 1): #CHECK FOR DIRTY BIT?
                 cache_hit = True
             if(cache_hit):
                 retrieved_data = data_line[num_tag_bits + num_dirty_bits + 1 + d_offset] #retrieve cache_data
@@ -315,22 +316,26 @@ def process_user_input(user_cache_prompt): #handle each case
         data_line_index = -1
 
         if(cache_hit): #cache hit
+            global number_of_cache_hits
+            number_of_cache_hits += 1
             if(write_hit_policy == 1): #cache hit write through
                 ramdict[dec_address] = data #update the data in RAM
                 for data_line in cache_data[d_set]:
                     data_line_index += 1
-                    tag_bits = data_line[2 : num_tag_bits + 2]
-                    if(tag_bits == cache_tag and data_line == 0): #find where the cache hit was
-                        cache_data[d_set][data_line_index][num_tag_bits + 2 + d_offset] = data #update the data in cache_data at the hit
+                    tag_instruction = data_line[2]
+                    if(tag_instruction == h_tag and data_line == 0): #find where the cache hit was
+                        cache_data[d_set][data_line_index][3 + d_offset] = data #update the data in cache_data at the hit
             else: #cache hit write back
                 for data_line in cache_data[d_set]:
                     data_line_index += 1
-                    tag_bits = data_line[2 : num_tag_bits + 2]
-                    if(tag_bits == cache_tag and data_line == 0): #find where the cache hit was
-                        cache_data[d_set][data_line_index][num_tag_bits + 2 + d_offset] = data #update the data in cache_data at the hit
+                    tag_instruction = data_line[2]
+                    if(tag_instruction == h_tag and data_line == 0): #find where the cache hit was
+                        cache_data[d_set][data_line_index][3 + d_offset] = data #update the data in cache_data at the hit
                         cache_data[d_set][data_line_index][1] = '1' #update the dirty bit to be 1
                         dirty_bit = '1'
         else: #cache miss
+            global number_of_cache_misses
+            number_of_cache_misses += 1
             write_hit = "yes"
             ram_address = address
             eviction_line = dec_address / 8 #eviction lines come in terms of 8
