@@ -252,15 +252,15 @@ def process_user_input(user_cache_prompt): #handle each case
         if (not cache_hit): # cache miss
             # random replacement
             if (replacement_policy == 1):
-                eviction_line = random_replacement(decimal_search_address, d_tag)
+                eviction_line = random_replacement(decimal_search_address, d_tag, d_set)
                 
             # least recently used
             elif (replacement_policy == 2):
-                eviction_line = least_recently_used(decimal_search_address, d_tag)
+                eviction_line = least_recently_used(decimal_search_address, d_tag, d_set)
                 
             # least frequently used
             else:
-                eviction_line = least_frequently_used(decimal_search_address, d_tag)
+                eviction_line = least_frequently_used(decimal_search_address, d_tag, d_set)
 
         else: # cache hit
             eviction_line = -1
@@ -456,21 +456,20 @@ def rotate(list):
 # @param[in] decimal_search_address The search address represented as a decimal.
 # @param[in] d_tag The tag of the search address represented as a decimal.
 # @return The line number of the eviction line represented as a decimal.
-def random_replacement(decimal_search_address, d_tag):
-    randset = random.randrange(0, number_of_sets) # set to replace from
+def random_replacement(decimal_search_address, d_tag, d_set):
     randline = random.randrange(0, associativity) # line in the set to replace from
-    eviction_line = int(str(randset) + str(randline), 2) # overall line to replace from
-    cache_line = cache_data[randset][randline] # saving the cache_line in case we need to send to ram
-    cache_data[randset][randline][0] = '1' # set the valid bit to 1
+    eviction_line = int(str(randline), 2) # overall line to replace from
+    cache_line = cache_data[d_set][randline] # saving the cache_line in case we need to send to ram
+    cache_data[d_set][randline][0] = '1' # set the valid bit to 1
     # next four lines make sure that the tag has two hexadecimal digits
     tag_hex = hex(d_tag).split("x")[1]
     while len(tag_hex) != 2:
         tag_hex = '0' + tag_hex
-    cache_data[randset][randline][2] = tag_hex # set the tag to the search address tag
+    cache_data[d_set][randline][2] = tag_hex # set the tag to the search address tag
     ram_block = get_ram_block(decimal_search_address, data_block_size)
     counter = 3
     for byte in ram_block:
-        cache_data[randset][randline][counter] = byte
+        cache_data[d_set][randline][counter] = byte
         counter += 1
     check_dirty_bit(cache_line, decimal_search_address, data_block_size)
     return eviction_line
@@ -479,27 +478,26 @@ def random_replacement(decimal_search_address, d_tag):
 # @param[in] decimal_search_address The search address represented as a decimal.
 # @param[in] d_tag The tag of the search address represented as a decimal.
 # @return The line number of the eviction line represented as a decimal.
-def least_recently_used(decimal_search_address, d_tag):
+def least_recently_used(decimal_search_address, d_tag, d_set):
     # Now that we have the line, we can use it to alter the data in line
     global recently_used
     eviction_line = recently_used[0] # overall line to replace from
     bin_rec_used = bin(eviction_line).split('b')[1]
     while len(bin_rec_used) != 2:
         bin_rec_used = '0' + bin_rec_used
-    least_rec_set = int(bin_rec_used[0])
     least_rec_line = int(bin_rec_used[1])
-    cache_data[least_rec_set][least_rec_line][0] = '1' # set the valid bit to 1
-    cache_line = cache_data[least_rec_set][least_rec_line] # saving the cache_line in case we need to send to ram
+    cache_data[d_set][least_rec_line][0] = '1' # set the valid bit to 1
+    cache_line = cache_data[d_set][least_rec_line] # saving the cache_line in case we need to send to ram
     recently_used = rotate(recently_used) # move the least recently used line to the next smallest line number
     # next four lines make sure that the tag has two hexadecimal digits
     tag_hex = hex(d_tag).split("x")[1]
     while len(tag_hex) != 2:
         tag_hex = '0' + tag_hex
-    cache_data[least_rec_set][least_rec_line][2] = tag_hex # set the tag to the search address tag
+    cache_data[d_set][least_rec_line][2] = tag_hex # set the tag to the search address tag
     ram_block = get_ram_block(decimal_search_address, data_block_size)
     counter = 3
     for byte in ram_block:
-        cache_data[least_rec_set][least_rec_line][counter] = byte
+        cache_data[d_set][least_rec_line][counter] = byte
         counter += 1
     check_dirty_bit(cache_line, decimal_search_address, data_block_size)
     return eviction_line
@@ -508,7 +506,7 @@ def least_recently_used(decimal_search_address, d_tag):
 # @param[in] decimal_search_address The search address represented as a decimal.
 # @param[in] d_tag The tag of the search address represented as a decimal.
 # @return The line number of the eviction line represented as a decimal.
-def least_frequently_used(decimal_search_address, d_tag):
+def least_frequently_used(decimal_search_address, d_tag, d_set):
     # logic to calculate least frequently used line
     least_freq_set = 0
     least_freq_line = 0
