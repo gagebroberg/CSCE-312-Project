@@ -6,6 +6,7 @@
 #Description: In this lab, we wrote a program which simulates a cache memory. It consists of taking an input file for memory,
 #and prompting the user for inputs. We then use the inputs for updating, deleting, and printing cache memory.
 
+from functools import cache
 import math
 import random
 import sys
@@ -296,16 +297,12 @@ def process_user_input(user_cache_prompt): #handle each case
 
         #determine if cache_hit
         cache_hit = False
-        retrieved_data = '0'
         for data_line in cache_data[d_set]:        #iterate through cache_data[d_set]
             tag_instruction = data_line[2] #check tag         each data_line is of the form [valid_bit][dirty_bit][tag][data_blocks]
-            if(tag_instruction == h_tag and data_line[0] == 1): #CHECK FOR DIRTY BIT?
+            if(tag_instruction == h_tag):
                 cache_hit = True
-            if(cache_hit):
-                retrieved_data = data_line[num_tag_bits + num_dirty_bits + 1 + d_offset] #retrieve cache_data
-                break
-        if(retrieved_data == '0'):
-            cache_hit = False
+            if(data_line[0] == '0'):
+                cache_hit = False
         
 
         #process cache_hit
@@ -318,6 +315,7 @@ def process_user_input(user_cache_prompt): #handle each case
         if(cache_hit): #cache hit
             number_of_cache_hits += 1
             if(write_hit_policy == 1): #cache hit write through
+                print("Got here!!!!!")
                 ramdict[dec_address] = data #update the data in RAM
                 for data_line in cache_data[d_set]:
                     data_line_index += 1
@@ -334,9 +332,8 @@ def process_user_input(user_cache_prompt): #handle each case
                         dirty_bit = '1'
         else: #cache miss
             number_of_cache_misses += 1
-            write_hit = "yes"
+            write_hit = "no"
             ram_address = address
-            eviction_line = dec_address / 8 #eviction lines come in terms of 8
             #write the new cache in?
             if(write_miss_policy == 1): #cache miss write allocate
                 data = ramdict[dec_address] #load the data from RAM
@@ -351,7 +348,7 @@ def process_user_input(user_cache_prompt): #handle each case
 
         #print
         print("set:" + str(d_set))
-        print("tag:" + str(d_tag))
+        print("tag:" + h_tag)
         print("write_hit:" + write_hit)
         print("eviction_line:" + str(eviction_line))
         print("ram_address:" + ram_address)
