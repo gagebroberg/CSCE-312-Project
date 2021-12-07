@@ -13,8 +13,11 @@ import sys
 # Dictionaries
 ###########################################################################################
 ## The ram dictionary stores the ram data with line numbers being keys
-# and the hex values at those line numbers as values.
+# and the hex values at those line numbers as values. Initialized to 
+# all '00' initially
 ramdict = {}
+for i in range(256):
+    ramdict[i] = '00'
 ## This is the replacement policy dictionary that stores the options for replacement. 
 # This allows for easy conversion from the number entered by the user to the string
 # representation of the replacement policy.
@@ -103,25 +106,24 @@ def main():
     #Initialize Physical memory
     ###########################################################################################
     print("*** Welcome to the cache simulator ***")
-    print("initialize the RAM:")
+    ram_init = input("initialize the RAM:\n")
     #open the data file
     path = sys.argv[1] #take input from command line
     data_file = open(path, 'r') #open file
-    moredata = True
     memaddress = -1 #memaddress is the address used to access memory from dictionary
     ###########################################################################################
 
     #Iterate through data file
     ###########################################################################################
-    while(moredata):
+    ram_end_hex = ram_init.split()[2]
+    ram_end_dec = int(ram_end_hex.split("x")[1], 16)
+    print(ram_end_dec)
+
+    for i in range(ram_end_dec + 1):
         memoryline = data_file.readline() #read in memory line by line
-        if not memoryline: #if read unsuccesful, file is at the end, break
-            moredata = False
-            break
         memaddress += 1 #increment memory address, such that each index is unique
         ramdict[memaddress] = memoryline #store memoryline at memaddress
     data_file.close() #close the file
-    print("init-ram 0x00 " + "0x%X" % memaddress) #print the size of ram memory
     print("RAM succesfully initialized!") #print once all data in file has been added to memory dictionary
     ##########################################################################################
 
