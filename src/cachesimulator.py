@@ -341,11 +341,11 @@ def process_user_input(user_cache_prompt): #handle each case
             if(write_miss_policy == 1): #cache miss write allocate
                 data = ramdict[dec_address] #load the data from RAM
                 if(replacement_policy == 1):
-                    eviction_line = random_replacement(dec_address, d_tag)  #cache miss write allocate random replacement
+                    eviction_line = random_replacement(dec_address, d_tag, d_set)  #cache miss write allocate random replacement
                 elif(replacement_policy == 2):
-                    eviction_line = least_recently_used(dec_address, d_tag) #cache miss write allocate recent replacement
+                    eviction_line = least_recently_used(dec_address, d_tag, d_set) #cache miss write allocate recent replacement
                 else:
-                    eviction_line = least_frequently_used(dec_address, d_tag) #cache miss write allocate frequent replacement
+                    eviction_line = least_frequently_used(dec_address, d_tag, d_set) #cache miss write allocate frequent replacement
             else: #cache miss no-write allocate
                 ramdict[dec_address] = data #update the data in RAM (do not load in cache)
 
