@@ -316,7 +316,6 @@ def process_user_input(user_cache_prompt): #handle each case
         data_line_index = -1
 
         if(cache_hit): #cache hit
-            global number_of_cache_hits
             number_of_cache_hits += 1
             if(write_hit_policy == 1): #cache hit write through
                 ramdict[dec_address] = data #update the data in RAM
@@ -334,7 +333,6 @@ def process_user_input(user_cache_prompt): #handle each case
                         cache_data[d_set][data_line_index][1] = '1' #update the dirty bit to be 1
                         dirty_bit = '1'
         else: #cache miss
-            global number_of_cache_misses
             number_of_cache_misses += 1
             write_hit = "yes"
             ram_address = address
