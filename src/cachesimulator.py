@@ -358,11 +358,11 @@ def process_user_input(user_cache_prompt): #handle each case
     elif(user_cache_prompt == "cache-flush"):
         for z in range(number_of_sets):
             for y in range(associativity):
-                for x in range(num_valid_bits + num_tag_bits + num_dirty_bits + data_block_size):
+                for x in range(num_valid_bits + num_tag_hex_pairs + num_dirty_bits + data_block_size):
                     if(x < 2):
-                        cache_data[x][y][z] = '0'
+                        cache_data[z][y][x] = '0'
                     else:
-                        cache_data[x][y][z] = '00'
+                        cache_data[z][y][x] = '00'
         print("cache_cleared")
 
     elif(user_cache_prompt == "cache-view"):
