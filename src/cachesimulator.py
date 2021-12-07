@@ -117,8 +117,6 @@ def main():
     ###########################################################################################
     ram_end_hex = ram_init.split()[2]
     ram_end_dec = int(ram_end_hex.split("x")[1], 16)
-    print(ram_end_dec)
-
     for i in range(ram_end_dec + 1):
         memoryline = data_file.readline() #read in memory line by line
         memaddress += 1 #increment memory address, such that each index is unique
