@@ -227,7 +227,7 @@ def process_user_input(user_cache_prompt): #handle each case
         cache_hit = False
         data = -1 #initializing the search address
         for data_line in cache_data[d_set]:
-            tag_bits = data_line[1:num_tag_bits+1]
+            tag_bits = data_line[1:num_tag_bits+1] #probably should be updated to be from 2 to 4, and instead of adding tag bits, we can simply place the hex tag pair
             if (tag_bits == binary_tag):  #check that the tag bits in data_line match
                 cache_hit == True
             if (data_line[0] != 1): #check the valid bit is true
@@ -235,11 +235,11 @@ def process_user_input(user_cache_prompt): #handle each case
             if(cache_hit):
                 data = data_line[num_tag_bits + 1 + d_offset]
                 break               #iterative, the next iteration in the loop could suggest that the cache_hit is false, even though it's true
-        if(data == '0'):
-            cache_hit = False
-        is_hit = "No"
+        if(data == '00'):
+            cache_hit = False #the data will never be '0', it's initialized to '00'
+        is_hit = "no"
         if(cache_hit):
-            is_hit = "Yes"
+            is_hit = "yes"
             global number_of_cache_hits
             number_of_cache_hits += 1
             eviction_line = '-1'
@@ -358,13 +358,13 @@ def process_user_input(user_cache_prompt): #handle each case
 
 
     elif(user_cache_prompt == "cache-flush"):
-        for x in range(number_of_sets):
+        for z in range(number_of_sets):
             for y in range(associativity):
-                for z in range(num_valid_bits + num_tag_bits + num_dirty_bits + data_block_size):
-                    if(z < 2):
-                        cache_data[x][y][z] = '0'
+                for x in range(num_valid_bits + num_tag_hex_pairs + num_dirty_bits + data_block_size):
+                    if(x < 2):
+                        cache_data[z][y][x] = '0'
                     else:
-                        cache_data[x][y][z] = '00'
+                        cache_data[z][y][x] = '00'
         print("cache_cleared")
 
     elif(user_cache_prompt == "cache-view"):
