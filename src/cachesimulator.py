@@ -163,10 +163,8 @@ def main():
                         ] for y in range(associativity)
                     ] for z in range(number_of_sets)
                 ] #fill cache with 00's
-    print(cache_data)
     global recently_used
     recently_used = [x for x in range(number_of_sets * associativity)]
-    print(recently_used)
     global frequently_used
     frequently_used = [
                         [
@@ -174,7 +172,6 @@ def main():
                             ] for y in range(associativity)
                         ] for z in range(number_of_sets)
                     ] # fill the recently used with 0's
-    print(frequently_used)
     
     print("cache successfully configured!")                          
     print_cache_menu()
@@ -263,10 +260,6 @@ def process_user_input(user_cache_prompt): #handle each case
             # least frequently used
             else:
                 eviction_line = least_frequently_used(decimal_search_address, d_tag)
-                    
-            print(cache_data)
-            print(recently_used)
-            print(frequently_used)
 
         else: # cache hit
             eviction_line = -1
@@ -363,7 +356,6 @@ def process_user_input(user_cache_prompt): #handle each case
 
 
     elif(user_cache_prompt == "cache-flush"):
-        print(range(num_valid_bits + num_tag_bits + data_block_size))
         for x in range(number_of_sets):
             for y in range(associativity):
                 for z in range(num_valid_bits + num_tag_bits + num_dirty_bits + data_block_size):
@@ -439,6 +431,20 @@ def get_ram_block(dec_ram_address, data_block_size):
         ram_block.append(ramdict[i].strip())
     return ram_block
 
+## This function takes in the cache_line, the decimal ram address, and the size of a data block
+# If the dirty bit is 0, then nothing is done and the line is allowed to be replaced.
+# If the dirty bit is 1, then the cache line is 
+def check_dirty_bit(cache_line, dec_ram_address, data_block_size):
+    if cache_line[1] == '0':
+        pass # Do nothing. If dirty bit is 0, then we can simply replace the line
+    elif cache_line[1] == '1': # Then we need to write the line to memory
+        cache_data_block = cache_line[3:]
+        lower_bound = 0
+        while (lower_bound + data_block_size) < dec_ram_address:
+            lower_bound = lower_bound + data_block_size
+        for i in range(lower_bound, lower_bound + data_block_size):
+            ramdict[i] = cache_data_block[i]
+
 ## This function rotates the elements of an array once. For example, [0, 1, 2, 3] -> [1, 2, 3, 0].
 # @param[in] list The list to rotate.
 # @return The new list that has been rotated.
@@ -450,10 +456,10 @@ def rotate(list):
 # @param[in] d_tag The tag of the search address represented as a decimal.
 # @return The line number of the eviction line represented as a decimal.
 def random_replacement(decimal_search_address, d_tag):
-    print("RR") # Denotes random replacement; remove later
     randset = random.randrange(0, number_of_sets) # set to replace from
     randline = random.randrange(0, associativity) # line in the set to replace from
     eviction_line = int(str(randset) + str(randline), 2) # overall line to replace from
+    cache_line = cache_data[randset][randline] # saving the cache_line in case we need to send to ram
     cache_data[randset][randline][0] = '1' # set the valid bit to 1
     # next four lines make sure that the tag has two hexadecimal digits
     tag_hex = hex(d_tag).split("x")[1]
@@ -465,6 +471,7 @@ def random_replacement(decimal_search_address, d_tag):
     for byte in ram_block:
         cache_data[randset][randline][counter] = byte
         counter += 1
+    check_dirty_bit(cache_line, decimal_search_address, data_block_size)
     return eviction_line
         
 ## This function resolves a least recently used replacement if the user enters their replacement policy as '2'.
@@ -472,16 +479,16 @@ def random_replacement(decimal_search_address, d_tag):
 # @param[in] d_tag The tag of the search address represented as a decimal.
 # @return The line number of the eviction line represented as a decimal.
 def least_recently_used(decimal_search_address, d_tag):
-    print("LRU")    
     # Now that we have the line, we can use it to alter the data in line
     global recently_used
     eviction_line = recently_used[0] # overall line to replace from
-    bin_rec_used = bin(recently_used[0]).split('b')[1]
+    bin_rec_used = bin(eviction_line).split('b')[1]
     while len(bin_rec_used) != 2:
         bin_rec_used = '0' + bin_rec_used
     least_rec_set = int(bin_rec_used[0])
     least_rec_line = int(bin_rec_used[1])
     cache_data[least_rec_set][least_rec_line][0] = '1' # set the valid bit to 1
+    cache_line = cache_data[least_rec_set][least_rec_line] # saving the cache_line in case we need to send to ram
     recently_used = rotate(recently_used) # move the least recently used line to the next smallest line number
     # next four lines make sure that the tag has two hexadecimal digits
     tag_hex = hex(d_tag).split("x")[1]
@@ -493,6 +500,7 @@ def least_recently_used(decimal_search_address, d_tag):
     for byte in ram_block:
         cache_data[least_rec_set][least_rec_line][counter] = byte
         counter += 1
+    check_dirty_bit(cache_line, decimal_search_address, data_block_size)
     return eviction_line
         
 ## This function resolves a least frequently used replacement if the user enters their replacement policy as '3'.
@@ -500,7 +508,6 @@ def least_recently_used(decimal_search_address, d_tag):
 # @param[in] d_tag The tag of the search address represented as a decimal.
 # @return The line number of the eviction line represented as a decimal.
 def least_frequently_used(decimal_search_address, d_tag):
-    print("LFU")
     # logic to calculate least frequently used line
     least_freq_set = 0
     least_freq_line = 0
@@ -514,6 +521,7 @@ def least_frequently_used(decimal_search_address, d_tag):
     # Now that we have the line, we can use it to alter the data in line
     eviction_line = int(str(least_freq_set) + str(least_freq_line), 2) # overall line to replace from
     cache_data[least_freq_set][least_freq_line][0] = '1' # set the valid bit to 1
+    cache_line = cache_data[least_freq_set][least_freq_line] # saving the cache_line in case we need to send to ram
     frequently_used[least_freq_set][least_freq_line][0] += 1
     # next four lines make sure that the tag has two hexadecimal digits
     tag_hex = hex(d_tag).split("x")[1]
@@ -524,7 +532,8 @@ def least_frequently_used(decimal_search_address, d_tag):
     counter = 3
     for byte in ram_block:
         cache_data[least_freq_set][least_freq_line][counter] = byte
-        counter += 1
+        counter += 1    
+    check_dirty_bit(cache_line, decimal_search_address, data_block_size)
     return eviction_line
 
 if __name__ == "__main__":
