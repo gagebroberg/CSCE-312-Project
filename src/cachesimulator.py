@@ -218,23 +218,24 @@ def process_user_input(user_cache_prompt): #handle each case
         binary_offset = bs_address_string[num_tag_bits + num_set_index_bits:] # from the end of set bets to the end of the address
         d_tag = int(binary_tag, 2)
         h_tag = hex(d_tag).split('x')[1]
+        while len(h_tag) != 2:
+            h_tag = '0' + h_tag
         d_set = int(binary_set, 2)
         d_offset = int(binary_offset, 2)
+        print(d_offset)
         print("set:" + str(d_set))
         print("tag:" + h_tag)
         cache_hit = False
         data = -1 #initializing the search address
         for data_line in cache_data[d_set]:
-            tag_bits = data_line[1:num_tag_bits+1] #probably should be updated to be from 2 to 4, and instead of adding tag bits, we can simply place the hex tag pair
-            if (tag_bits == binary_tag):  #check that the tag bits in data_line match
-                cache_hit == True
-            if (data_line[0] != 1): #check the valid bit is true
-                cache_hit == False
+            tag_bits = data_line[2]
+            if (tag_bits == h_tag):  #check that the tag bits in data_line match
+                cache_hit = True
+            if (data_line[0] == '0'): #check the valid bit is true
+                cache_hit = False
             if(cache_hit):
-                data = data_line[num_tag_bits + 1 + d_offset]
+                data = data_line[num_valid_bits + num_dirty_bits + num_tag_hex_pairs + d_offset]
                 break               #iterative, the next iteration in the loop could suggest that the cache_hit is false, even though it's true
-        if(data == '00'):
-            cache_hit = False #the data will never be '0', it's initialized to '00'
         is_hit = "no"
         if(cache_hit):
             is_hit = "yes"
