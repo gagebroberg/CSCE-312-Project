@@ -273,6 +273,7 @@ def process_user_input(user_cache_prompt): #handle each case
     elif("cache-write" in user_cache_prompt):
         #process input
         data = user_cache_prompt.split()[2]
+        data = data.split('x')[1]
         address = user_cache_prompt.split()[1]
         newaddress = address.split("x")[1]
         dec_address = int(newaddress, 16)
@@ -292,15 +293,15 @@ def process_user_input(user_cache_prompt): #handle each case
         d_set = int(cache_set, 2)
         d_offset = int(cache_offset, 2)
         h_tag = hex(d_tag).split('x')[1]
+        while(len(h_tag) != 2):
+            h_tag = '0' + h_tag
 
         #determine if cache_hit
         cache_hit = False
         for data_line in cache_data[d_set]:        #iterate through cache_data[d_set]
             tag_instruction = data_line[2] #check tag         each data_line is of the form [valid_bit][dirty_bit][tag][data_blocks]
-            if(tag_instruction == h_tag):
+            if(tag_instruction == h_tag and data_line[0] == '1'):
                 cache_hit = True
-            if(data_line[0] == '0'):
-                cache_hit = False
         
 
         #process cache_hit
@@ -313,18 +314,17 @@ def process_user_input(user_cache_prompt): #handle each case
         if(cache_hit): #cache hit
             number_of_cache_hits += 1
             if(write_hit_policy == 1): #cache hit write through
-                print("Got here!!!!!")
                 ramdict[dec_address] = data #update the data in RAM
                 for data_line in cache_data[d_set]:
                     data_line_index += 1
                     tag_instruction = data_line[2]
-                    if(tag_instruction == h_tag and data_line == 0): #find where the cache hit was
+                    if(tag_instruction == h_tag and data_line[0] == '1'): #find where the cache hit was
                         cache_data[d_set][data_line_index][3 + d_offset] = data #update the data in cache_data at the hit
             else: #cache hit write back
                 for data_line in cache_data[d_set]:
                     data_line_index += 1
                     tag_instruction = data_line[2]
-                    if(tag_instruction == h_tag and data_line == 0): #find where the cache hit was
+                    if(tag_instruction == h_tag and data_line[0] == '1'): #find where the cache hit was
                         cache_data[d_set][data_line_index][3 + d_offset] = data #update the data in cache_data at the hit
                         cache_data[d_set][data_line_index][1] = '1' #update the dirty bit to be 1
                         dirty_bit = '1'
@@ -350,8 +350,7 @@ def process_user_input(user_cache_prompt): #handle each case
         print("write_hit:" + write_hit)
         print("eviction_line:" + str(eviction_line))
         print("ram_address:" + ram_address)
-        print("data:" + data)
-        print("dirty_bit:" + dirty_bit)
+        print("data:" + data + "dirty_bit:" + dirty_bit)
 
 
     elif(user_cache_prompt == "cache-flush"):
