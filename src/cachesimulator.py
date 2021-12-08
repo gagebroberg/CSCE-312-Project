@@ -394,7 +394,7 @@ def process_user_input(user_cache_prompt): #handle each case
             if(len(hex_address) < 4):
                 while(len(hex_address) < 4):
                     hex_address = hex_address[:2] + '0' + hex_address[-1]
-                hex_address = hex_address.upper()
+            hex_address = hex_address.upper()
             print(hex_address + ":", end="")          #print the address for the line of memory every 8 blocks (in hexadecimal)
             for j in range(0, 8):
                 print(ramdict[i+j].strip(), end=" ")#print the memory in nested loop up to 7, so all memory is printed (i + j where j = 8 would just be the next sequence of i)
