@@ -350,7 +350,8 @@ def process_user_input(user_cache_prompt): #handle each case
         print("write_hit:" + write_hit)
         print("eviction_line:" + str(eviction_line))
         print("ram_address:" + ram_address)
-        print("data:" + data + "dirty_bit:" + dirty_bit)
+        print("data:" + data)
+        print("dirty_bit:" + dirty_bit)
 
 
     elif(user_cache_prompt == "cache-flush"):
