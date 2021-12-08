@@ -395,9 +395,9 @@ def process_user_input(user_cache_prompt): #handle each case
         print("address:data")
         for i in range(0, memory_size, 8):    #traverse the memory 8 blocks of data at a time
             hex_address = hex(i)
-            if(len(hex_address) < 2):
-                while(len(hex_address) < 2):
-                    hex_address = '0' + hex_address
+            if(len(hex_address) < 4):
+                while(len(hex_address) < 4):
+                    hex_address = hex_address[:2] + '0' + hex_address[-1]
                 hex_address = hex_address.upper()
             print(hex_address + ":", end="")          #print the address for the line of memory every 8 blocks (in hexadecimal)
             for j in range(0, 8):
