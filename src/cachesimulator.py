@@ -115,9 +115,14 @@ def main():
 
     #Iterate through data file
     ###########################################################################################
+    ram_start_hex = ram_init.split()[1]
+    ram_start_dec = int(ram_start_hex.split("x")[1], 16) #include the start location
     ram_end_hex = ram_init.split()[2]
     ram_end_dec = int(ram_end_hex.split("x")[1], 16)
-    for i in range(ram_end_dec + 1):
+    for i in range(ram_start_dec - 1): 
+        memoryline = data_file.readline() #read the lines up until the start (these are not used in ram, but need to be read for indexing purposes)
+        memaddress += 1
+    for i in range(ram_start_dec, ram_end_dec + 1): #range(start, end)
         memoryline = data_file.readline() #read in memory line by line
         memaddress += 1 #increment memory address, such that each index is unique
         ramdict[memaddress] = memoryline #store memoryline at memaddress
@@ -390,6 +395,10 @@ def process_user_input(user_cache_prompt): #handle each case
         print("address:data")
         for i in range(0, memory_size, 8):    #traverse the memory 8 blocks of data at a time
             hex_address = hex(i)
+            if(len(hex_address) < 2):
+                while(len(hex_address) < 2):
+                    hex_address = '0' + hex_address
+                hex_address = hex_address.upper()
             print(hex_address + ":", end="")          #print the address for the line of memory every 8 blocks (in hexadecimal)
             for j in range(0, 8):
                 print(ramdict[i+j].strip(), end=" ")#print the memory in nested loop up to 7, so all memory is printed (i + j where j = 8 would just be the next sequence of i)
