@@ -119,10 +119,7 @@ def main():
     ram_start_dec = int(ram_start_hex.split("x")[1], 16) #include the start location
     ram_end_hex = ram_init.split()[2]
     ram_end_dec = int(ram_end_hex.split("x")[1], 16)
-    for i in range(ram_start_dec - 1): 
-        memoryline = data_file.readline() #read the lines up until the start (these are not used in ram, but need to be read for indexing purposes)
-        memaddress += 1
-    for i in range(ram_start_dec, ram_end_dec + 1): #range(start, end)
+    for i in range(ram_end_dec + 1): #range(start, end)
         memoryline = data_file.readline() #read in memory line by line
         memaddress += 1 #increment memory address, such that each index is unique
         ramdict[memaddress] = memoryline #store memoryline at memaddress
