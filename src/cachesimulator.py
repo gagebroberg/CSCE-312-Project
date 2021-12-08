@@ -226,7 +226,6 @@ def process_user_input(user_cache_prompt): #handle each case
             h_tag = '0' + h_tag
         d_set = int(binary_set, 2)
         d_offset = int(binary_offset, 2)
-        print(d_offset)
         print("set:" + str(d_set))
         print("tag:" + h_tag)
         cache_hit = False
@@ -442,16 +441,17 @@ def get_ram_block(dec_ram_address, data_block_size):
 ## This function takes in the cache_line, the decimal ram address, and the size of a data block
 # If the dirty bit is 0, then nothing is done and the line is allowed to be replaced.
 # If the dirty bit is 1, then the cache line is 
-def check_dirty_bit(cache_line, dec_ram_address, data_block_size):
+def check_dirty_bit(cache_line, data_block_size):
+    cache_line_dec_tag = int(cache_line[2], 16)
     if cache_line[1] == '0':
         pass # Do nothing. If dirty bit is 0, then we can simply replace the line
     elif cache_line[1] == '1': # Then we need to write the line to memory
         cache_data_block = cache_line[3:]
         lower_bound = 0
-        while (lower_bound + data_block_size) < dec_ram_address:
+        while (lower_bound + data_block_size) < cache_line_dec_tag:
             lower_bound = lower_bound + data_block_size
         for i in range(lower_bound, lower_bound + data_block_size):
-            ramdict[i] = cache_data_block[i]
+            ramdict[i] = cache_data_block[i - lower_bound]
 
 ## This function rotates the elements of an array once. For example, [0, 1, 2, 3] -> [1, 2, 3, 0].
 # @param[in] list The list to rotate.
@@ -478,7 +478,8 @@ def random_replacement(decimal_search_address, d_tag, d_set):
     for byte in ram_block:
         cache_data[d_set][randline][counter] = byte
         counter += 1
-    check_dirty_bit(cache_line, decimal_search_address, data_block_size)
+    check_dirty_bit(cache_line, data_block_size)
+    cache_data[d_set][randline][1] = '0'
     return eviction_line
         
 ## This function resolves a least recently used replacement if the user enters their replacement policy as '2'.
@@ -493,8 +494,8 @@ def least_recently_used(decimal_search_address, d_tag, d_set):
     while len(bin_rec_used) != 2:
         bin_rec_used = '0' + bin_rec_used
     least_rec_line = int(bin_rec_used[1])
+    cache_line = list(cache_data[d_set][least_rec_line]) # saving the cache_line in case we need to send to ram
     cache_data[d_set][least_rec_line][0] = '1' # set the valid bit to 1
-    cache_line = cache_data[d_set][least_rec_line] # saving the cache_line in case we need to send to ram
     recently_used[d_set] = rotate(recently_used[d_set]) # move the least recently used line to the next smallest line number
     # next four lines make sure that the tag has two hexadecimal digits
     tag_hex = hex(d_tag).split("x")[1]
@@ -506,7 +507,9 @@ def least_recently_used(decimal_search_address, d_tag, d_set):
     for byte in ram_block:
         cache_data[d_set][least_rec_line][counter] = byte
         counter += 1
-    check_dirty_bit(cache_line, decimal_search_address, data_block_size)
+    print(cache_line)
+    check_dirty_bit(cache_line, data_block_size)
+    cache_data[d_set][least_rec_line][1] = '0'
     return eviction_line
         
 ## This function resolves a least frequently used replacement if the user enters their replacement policy as '3'.
@@ -515,7 +518,6 @@ def least_recently_used(decimal_search_address, d_tag, d_set):
 # @return The line number of the eviction line represented as a decimal.
 def least_frequently_used(decimal_search_address, d_tag, d_set):
     # logic to calculate least frequently used line
-    least_freq_set = 0
     least_freq_line = 0
     min_frequency = frequently_used[0][0][0]
     for line_count, line in enumerate(frequently_used[d_set]):
@@ -537,7 +539,8 @@ def least_frequently_used(decimal_search_address, d_tag, d_set):
     for byte in ram_block:
         cache_data[d_set][least_freq_line][counter] = byte
         counter += 1    
-    check_dirty_bit(cache_line, decimal_search_address, data_block_size)
+    check_dirty_bit(cache_line, data_block_size)
+    cache_data[d_set][least_freq_line][1] = '0'
     return eviction_line
 
 if __name__ == "__main__":
