@@ -80,7 +80,7 @@ number_of_cache_misses = 0
 cache_data = list(list(list()))
 ## This is the recently used list that helps calculate which of the lines in cache
 # was least recently used should the user enter '2' for the replacement policy.
-recently_used = list()
+recently_used = list(list())
 ## This is the frequently used triple nested list that helps calculate which of the lines in cache
 # was least frequently used should the user enter '3' for the replacement policy.
 frequently_used = list(list(list()))
@@ -164,7 +164,8 @@ def main():
                     ] for z in range(number_of_sets)
                 ] #fill cache with 00's
     global recently_used
-    recently_used = [x for x in range(number_of_sets * associativity)]
+    recently_used = [ [x for x in range(associativity)] for y in range(number_of_sets)]
+    print(recently_used)
     global frequently_used
     frequently_used = [
                         [
@@ -484,14 +485,14 @@ def random_replacement(decimal_search_address, d_tag, d_set):
 def least_recently_used(decimal_search_address, d_tag, d_set):
     # Now that we have the line, we can use it to alter the data in line
     global recently_used
-    eviction_line = recently_used[0] # overall line to replace from
+    eviction_line = recently_used[d_set][0] # line within set to replace from
     bin_rec_used = bin(eviction_line).split('b')[1]
     while len(bin_rec_used) != 2:
         bin_rec_used = '0' + bin_rec_used
     least_rec_line = int(bin_rec_used[1])
     cache_data[d_set][least_rec_line][0] = '1' # set the valid bit to 1
     cache_line = cache_data[d_set][least_rec_line] # saving the cache_line in case we need to send to ram
-    recently_used = rotate(recently_used) # move the least recently used line to the next smallest line number
+    recently_used[d_set] = rotate(recently_used[d_set]) # move the least recently used line to the next smallest line number
     # next four lines make sure that the tag has two hexadecimal digits
     tag_hex = hex(d_tag).split("x")[1]
     while len(tag_hex) != 2:
