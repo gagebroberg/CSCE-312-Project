@@ -6,7 +6,6 @@
 #Description: In this lab, we wrote a program which simulates a cache memory. It consists of taking an input file for memory,
 #and prompting the user for inputs. We then use the inputs for updating, deleting, and printing cache memory.
 
-from functools import cache
 import math
 import random
 import sys
@@ -166,7 +165,6 @@ def main():
                 ] #fill cache with 00's
     global recently_used
     recently_used = [ [x for x in range(associativity)] for y in range(number_of_sets)]
-    print(recently_used)
     global frequently_used
     frequently_used = [
                         [
@@ -174,8 +172,7 @@ def main():
                             ] for y in range(associativity)
                         ] for z in range(number_of_sets)
                     ] # fill the recently used with 0's
-    
-    print("cache successfully configured!")                          
+    print("cache successfully configured!")                     
     print_cache_menu()
     user_cache_prompt = input()
     process_user_input(user_cache_prompt)    
@@ -512,26 +509,24 @@ def least_frequently_used(decimal_search_address, d_tag, d_set):
     least_freq_set = 0
     least_freq_line = 0
     min_frequency = frequently_used[0][0][0]
-    for set_count, set in enumerate(frequently_used):
-        for line_count, line in enumerate(set):
-            if frequently_used[set_count][line_count][0] < min_frequency:
-                min_frequency = frequently_used[set_count][line_count][0]
-                least_freq_set = set_count
-                least_freq_line = line_count
+    for line_count, line in enumerate(frequently_used[d_set]):
+        if frequently_used[d_set][line_count][0] < min_frequency:
+            min_frequency = frequently_used[d_set][line_count][0]
+            least_freq_line = line_count
     # Now that we have the line, we can use it to alter the data in line
-    eviction_line = int(str(least_freq_set) + str(least_freq_line), 2) # overall line to replace from
-    cache_data[least_freq_set][least_freq_line][0] = '1' # set the valid bit to 1
-    cache_line = cache_data[least_freq_set][least_freq_line] # saving the cache_line in case we need to send to ram
-    frequently_used[least_freq_set][least_freq_line][0] += 1
+    eviction_line = int(str(least_freq_line), 2) # overall line to replace from
+    cache_data[d_set][least_freq_line][0] = '1' # set the valid bit to 1
+    cache_line = cache_data[d_set][least_freq_line] # saving the cache_line in case we need to send to ram
+    frequently_used[d_set][least_freq_line][0] += 1
     # next four lines make sure that the tag has two hexadecimal digits
     tag_hex = hex(d_tag).split("x")[1]
     while len(tag_hex) != 2:
         tag_hex = '0' + tag_hex
-    cache_data[least_freq_set][least_freq_line][2] = tag_hex # set the tag to the search address tag
+    cache_data[d_set][least_freq_line][2] = tag_hex # set the tag to the search address tag
     ram_block = get_ram_block(decimal_search_address, data_block_size)
     counter = 3
     for byte in ram_block:
-        cache_data[least_freq_set][least_freq_line][counter] = byte
+        cache_data[d_set][least_freq_line][counter] = byte
         counter += 1    
     check_dirty_bit(cache_line, decimal_search_address, data_block_size)
     return eviction_line
