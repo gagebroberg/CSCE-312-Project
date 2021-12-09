@@ -115,8 +115,6 @@ def main():
 
     #Iterate through data file
     ###########################################################################################
-    ram_start_hex = ram_init.split()[1]
-    ram_start_dec = int(ram_start_hex.split("x")[1], 16) #include the start location
     ram_end_hex = ram_init.split()[2]
     ram_end_dec = int(ram_end_hex.split("x")[1], 16)
     for i in range(ram_end_dec + 1): #range(start, end)
