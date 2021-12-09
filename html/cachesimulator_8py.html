@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=11"/>
 <meta name="generator" content="Doxygen 1.9.2"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Cache Simulator: /Users/gagebroberg/Documents/GitHub/CSCE-312-Project/src/cachesimulator.py File Reference</title>
+<title>Cache Simulator: cachesimulator.py File Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -60,10 +60,6 @@ $(function() {
 </iframe>
 </div>
 
-<div id="nav-path" class="navpath">
-  <ul>
-<li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li>  </ul>
-</div>
 </div><!-- top -->
 <div class="header">
   <div class="summary">
@@ -81,15 +77,18 @@ Namespaces</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
+<tr class="memitem:aa460cb4bbeb682feda9b4c3838add896"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecachesimulator.html#aa460cb4bbeb682feda9b4c3838add896">check_dirty_bit</a> (cache_line, data_block_size)</td></tr>
+<tr class="memdesc:aa460cb4bbeb682feda9b4c3838add896"><td class="mdescLeft">&#160;</td><td class="mdescRight">This function takes in the cache_line, the decimal ram address, and the size of a data block If the dirty bit is 0, then nothing is done and the line is allowed to be replaced.  <a href="namespacecachesimulator.html#aa460cb4bbeb682feda9b4c3838add896">More...</a><br /></td></tr>
+<tr class="separator:aa460cb4bbeb682feda9b4c3838add896"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5f56e872f614465ab40d332048d1800b"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecachesimulator.html#a5f56e872f614465ab40d332048d1800b">get_ram_block</a> (dec_ram_address, data_block_size)</td></tr>
 <tr class="memdesc:a5f56e872f614465ab40d332048d1800b"><td class="mdescLeft">&#160;</td><td class="mdescRight">This function takes in the search address and returns a list with the 8 byte block in ram surrounding the address as well as what the offset will be to access the specified data.  <a href="namespacecachesimulator.html#a5f56e872f614465ab40d332048d1800b">More...</a><br /></td></tr>
 <tr class="separator:a5f56e872f614465ab40d332048d1800b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6df9268b37979a64ec7581aa3a0a2f17"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecachesimulator.html#a6df9268b37979a64ec7581aa3a0a2f17">least_frequently_used</a> (decimal_search_address, d_tag)</td></tr>
-<tr class="memdesc:a6df9268b37979a64ec7581aa3a0a2f17"><td class="mdescLeft">&#160;</td><td class="mdescRight">This function resolves a least frequently used replacement if the user enters their replacement policy as '3'.  <a href="namespacecachesimulator.html#a6df9268b37979a64ec7581aa3a0a2f17">More...</a><br /></td></tr>
-<tr class="separator:a6df9268b37979a64ec7581aa3a0a2f17"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a62a384551a7e0fbbdcf43a64f1d67cfb"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecachesimulator.html#a62a384551a7e0fbbdcf43a64f1d67cfb">least_recently_used</a> (decimal_search_address, d_tag)</td></tr>
-<tr class="memdesc:a62a384551a7e0fbbdcf43a64f1d67cfb"><td class="mdescLeft">&#160;</td><td class="mdescRight">This function resolves a least recently used replacement if the user enters their replacement policy as '2'.  <a href="namespacecachesimulator.html#a62a384551a7e0fbbdcf43a64f1d67cfb">More...</a><br /></td></tr>
-<tr class="separator:a62a384551a7e0fbbdcf43a64f1d67cfb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa3ffc7c08a60a4bac706db1ac4a1326e"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecachesimulator.html#aa3ffc7c08a60a4bac706db1ac4a1326e">least_frequently_used</a> (decimal_search_address, d_tag, d_set)</td></tr>
+<tr class="memdesc:aa3ffc7c08a60a4bac706db1ac4a1326e"><td class="mdescLeft">&#160;</td><td class="mdescRight">This function resolves a least frequently used replacement if the user enters their replacement policy as '3'.  <a href="namespacecachesimulator.html#aa3ffc7c08a60a4bac706db1ac4a1326e">More...</a><br /></td></tr>
+<tr class="separator:aa3ffc7c08a60a4bac706db1ac4a1326e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a48a9ce6ab9caaf369f7b0099000fc6a4"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecachesimulator.html#a48a9ce6ab9caaf369f7b0099000fc6a4">least_recently_used</a> (decimal_search_address, d_tag, d_set)</td></tr>
+<tr class="memdesc:a48a9ce6ab9caaf369f7b0099000fc6a4"><td class="mdescLeft">&#160;</td><td class="mdescRight">This function resolves a least recently used replacement if the user enters their replacement policy as '2'.  <a href="namespacecachesimulator.html#a48a9ce6ab9caaf369f7b0099000fc6a4">More...</a><br /></td></tr>
+<tr class="separator:a48a9ce6ab9caaf369f7b0099000fc6a4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1ea345601d6fb5f545e59e1b69b1b306"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecachesimulator.html#a1ea345601d6fb5f545e59e1b69b1b306">main</a> ()</td></tr>
 <tr class="memdesc:a1ea345601d6fb5f545e59e1b69b1b306"><td class="mdescLeft">&#160;</td><td class="mdescRight">This is the main function that runs the entire program.  <a href="namespacecachesimulator.html#a1ea345601d6fb5f545e59e1b69b1b306">More...</a><br /></td></tr>
 <tr class="separator:a1ea345601d6fb5f545e59e1b69b1b306"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -99,9 +98,9 @@ Functions</h2></td></tr>
 <tr class="memitem:a535d64d99389744756af3e9a686d31d8"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecachesimulator.html#a535d64d99389744756af3e9a686d31d8">process_user_input</a> (user_cache_prompt)</td></tr>
 <tr class="memdesc:a535d64d99389744756af3e9a686d31d8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Processes the user input based on the menu option selected.  <a href="namespacecachesimulator.html#a535d64d99389744756af3e9a686d31d8">More...</a><br /></td></tr>
 <tr class="separator:a535d64d99389744756af3e9a686d31d8"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a84a5d0edc73fd63da60f74fd0f372657"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecachesimulator.html#a84a5d0edc73fd63da60f74fd0f372657">random_replacement</a> (decimal_search_address, d_tag)</td></tr>
-<tr class="memdesc:a84a5d0edc73fd63da60f74fd0f372657"><td class="mdescLeft">&#160;</td><td class="mdescRight">This function resolves a random replacement if the user enters their replacement policy as '1'.  <a href="namespacecachesimulator.html#a84a5d0edc73fd63da60f74fd0f372657">More...</a><br /></td></tr>
-<tr class="separator:a84a5d0edc73fd63da60f74fd0f372657"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a11554bbc01809c346cdcefea0e6d9e51"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecachesimulator.html#a11554bbc01809c346cdcefea0e6d9e51">random_replacement</a> (decimal_search_address, d_tag, d_set)</td></tr>
+<tr class="memdesc:a11554bbc01809c346cdcefea0e6d9e51"><td class="mdescLeft">&#160;</td><td class="mdescRight">This function resolves a random replacement if the user enters their replacement policy as '1'.  <a href="namespacecachesimulator.html#a11554bbc01809c346cdcefea0e6d9e51">More...</a><br /></td></tr>
+<tr class="separator:a11554bbc01809c346cdcefea0e6d9e51"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aea8c2455422806dba2911efcd3412130"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecachesimulator.html#aea8c2455422806dba2911efcd3412130">rotate</a> (list)</td></tr>
 <tr class="memdesc:aea8c2455422806dba2911efcd3412130"><td class="mdescLeft">&#160;</td><td class="mdescRight">This function rotates the elements of an array once.  <a href="namespacecachesimulator.html#aea8c2455422806dba2911efcd3412130">More...</a><br /></td></tr>
 <tr class="separator:aea8c2455422806dba2911efcd3412130"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -159,7 +158,7 @@ Variables</h2></td></tr>
 <tr class="memitem:ad14bede58d0bf01a49b75641a94f9e33"><td class="memItemLeft" align="right" valign="top">dictionary&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecachesimulator.html#ad14bede58d0bf01a49b75641a94f9e33">ramdict</a> = {}</td></tr>
 <tr class="memdesc:ad14bede58d0bf01a49b75641a94f9e33"><td class="mdescLeft">&#160;</td><td class="mdescRight">The ram dictionary stores the ram data with line numbers being keys and the hex values at those line numbers as values.  <a href="namespacecachesimulator.html#ad14bede58d0bf01a49b75641a94f9e33">More...</a><br /></td></tr>
 <tr class="separator:ad14bede58d0bf01a49b75641a94f9e33"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5c2979b176312f0dc1e7cd72b7fc237c"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecachesimulator.html#a5c2979b176312f0dc1e7cd72b7fc237c">recently_used</a> = list()</td></tr>
+<tr class="memitem:a5c2979b176312f0dc1e7cd72b7fc237c"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecachesimulator.html#a5c2979b176312f0dc1e7cd72b7fc237c">recently_used</a> = list(list())</td></tr>
 <tr class="memdesc:a5c2979b176312f0dc1e7cd72b7fc237c"><td class="mdescLeft">&#160;</td><td class="mdescRight">This is the recently used list that helps calculate which of the lines in cache was least recently used should the user enter '2' for the replacement policy.  <a href="namespacecachesimulator.html#a5c2979b176312f0dc1e7cd72b7fc237c">More...</a><br /></td></tr>
 <tr class="separator:a5c2979b176312f0dc1e7cd72b7fc237c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa756d76efeca3e5986c82699df649ea7"><td class="memItemLeft" align="right" valign="top">dictionary&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecachesimulator.html#aa756d76efeca3e5986c82699df649ea7">repl_policy_dict</a> = {1:'random_replacement', 2:'least_recently_used', 3:'least_frequently_used'}</td></tr>
