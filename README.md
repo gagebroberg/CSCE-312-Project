@@ -36,3 +36,11 @@ To configure the cache, the user has a variety of options:
 
 After entering the following information about the desired cache structure, the user will be notified that
 the cache has been successfully configured.
+
+### Interacting with the cache
+Now, the user will be presented with a menu of allowed actions. The user should enter the name of the desired option
+followed by parameters. The list of allowed action is as follows:
+1. cache-read
+```
+cache-read <hexadecimal search address>
+```
