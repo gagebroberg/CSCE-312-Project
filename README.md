@@ -44,3 +44,41 @@ followed by parameters. The list of allowed action is as follows:
 ```
 cache-read <hexadecimal search address>
 ```
+This option will return the data located at the requested address along with other information.
+2. cache-write
+```
+cache-write <hexadecimal search address> <hexadecimal entry to write>
+```
+This option will return the data entered and in which address along with other information.
+3. cache-flush
+```
+cache-flush
+```
+This option will clear all lines in the cache.
+4. cache-view
+```
+cache-view
+```
+This option will display the total number of bytes in RAM as well as a visual of what the RAM
+contains.
+5. memory-view
+```
+memory-view
+```
+This option will display the cache options configured earlier by the user as well as the number of
+cache misses, cache hits, and a visual representation of the cache.
+6. cache-dump
+```
+cache-dump
+```
+This option will write the contents of the cache to a file called cache.txt located in the output folder.
+7. memory-dump
+```
+memory-dump
+```
+This option will write the contents of the cache to a file called ram.txt located in the output folder.
+8. quit
+```
+quit
+```
+This option ends the program exectution.
