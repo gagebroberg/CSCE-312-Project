@@ -335,7 +335,6 @@ def process_user_input(user_cache_prompt): #handle each case
             ram_address = address
             #write the new cache in?
             if(write_miss_policy == 1): #cache miss write allocate
-                data = ramdict[dec_address] #load the data from RAM
                 if(replacement_policy == 1):
                     eviction_line = random_replacement(dec_address, d_tag, d_set)  #cache miss write allocate random replacement
                 elif(replacement_policy == 2):
@@ -351,7 +350,7 @@ def process_user_input(user_cache_prompt): #handle each case
         print("write_hit:" + write_hit)
         print("eviction_line:" + str(eviction_line))
         print("ram_address:" + ram_address)
-        print("data:" + data)
+        print("data:" + '0x' + data)
         print("dirty_bit:" + dirty_bit)
 
 
@@ -428,7 +427,7 @@ def process_user_input(user_cache_prompt): #handle each case
 # @return An 8-byte block containing the specified ram address.
 def get_ram_block(dec_ram_address, data_block_size):
     lower_bound = 0
-    while (lower_bound + data_block_size) < dec_ram_address:
+    while (lower_bound + data_block_size) < dec_ram_address + 1:
         lower_bound = lower_bound + data_block_size
     ram_block = list()
     for i in range(lower_bound, lower_bound + data_block_size):
@@ -506,7 +505,6 @@ def least_recently_used(decimal_search_address, d_tag, d_set):
     for byte in ram_block:
         cache_data[d_set][least_rec_line][counter] = byte
         counter += 1
-    print(cache_line)
     check_dirty_bit(cache_line, data_block_size)
     cache_data[d_set][least_rec_line][1] = '0'
     return eviction_line
