@@ -8,7 +8,7 @@ In order to run the program, navigate to the root of the project directory.
 Then (assuming the user is running the program using python 3) 
 the user can simply run the program in terminal with the following command:
 ```
-python3 src/cachesimulator.py input/input.txt
+python3 cachesimulator.py input.txt
 ```
 
 ## Using the program
@@ -71,12 +71,12 @@ cache misses, cache hits, and a visual representation of the cache.
 ```
 cache-dump
 ```
-This option will write the contents of the cache to a file called cache.txt located in the output folder.
+This option will write the contents of the cache to a file called cache.txt located in the root of the project.
 7. memory-dump
 ```
 memory-dump
 ```
-This option will write the contents of the cache to a file called ram.txt located in the output folder.
+This option will write the contents of the cache to a file called ram.txt located in the root of the project.
 8. quit
 ```
 quit
