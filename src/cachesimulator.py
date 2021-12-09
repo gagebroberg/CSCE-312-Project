@@ -219,6 +219,7 @@ def process_user_input(user_cache_prompt): #handle each case
         h_tag = hex(d_tag).split('x')[1]
         while len(h_tag) != 2:
             h_tag = '0' + h_tag
+        h_tag = h_tag.upper()
         d_set = int(binary_set, 2)
         d_offset = int(binary_offset, 2)
         print("set:" + str(d_set))
@@ -294,6 +295,7 @@ def process_user_input(user_cache_prompt): #handle each case
         h_tag = hex(d_tag).split('x')[1]
         while(len(h_tag) != 2):
             h_tag = '0' + h_tag
+        h_tag = h_tag.upper()
 
         #determine if cache_hit
         cache_hit = False
@@ -467,6 +469,7 @@ def random_replacement(decimal_search_address, d_tag, d_set):
     tag_hex = hex(d_tag).split("x")[1]
     while len(tag_hex) != 2:
         tag_hex = '0' + tag_hex
+    tag_hex = tag_hex.upper()
     cache_data[d_set][randline][2] = tag_hex # set the tag to the search address tag
     ram_block = get_ram_block(decimal_search_address, data_block_size)
     counter = 3
@@ -496,6 +499,7 @@ def least_recently_used(decimal_search_address, d_tag, d_set):
     tag_hex = hex(d_tag).split("x")[1]
     while len(tag_hex) != 2:
         tag_hex = '0' + tag_hex
+    tag_hex = tag_hex.upper()
     cache_data[d_set][least_rec_line][2] = tag_hex # set the tag to the search address tag
     ram_block = get_ram_block(decimal_search_address, data_block_size)
     counter = 3
@@ -528,6 +532,7 @@ def least_frequently_used(decimal_search_address, d_tag, d_set):
     tag_hex = hex(d_tag).split("x")[1]
     while len(tag_hex) != 2:
         tag_hex = '0' + tag_hex
+    tag_hex = tag_hex.upper()
     cache_data[d_set][least_freq_line][2] = tag_hex # set the tag to the search address tag
     ram_block = get_ram_block(decimal_search_address, data_block_size)
     counter = 3
