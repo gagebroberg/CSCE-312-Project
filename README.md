@@ -1,4 +1,4 @@
-# CSCE-312-Project
+# CacheSimulator
 
 ## Compiling
 Since this is a python program, there is no compilation necessary. The user needs a python interpreter in order to run the program. It is recommended that python3 is used to run the program.
